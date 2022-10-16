@@ -31,7 +31,8 @@ defmodule Blog.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:phoenix_pubsub, "~> 2.0"}
+      {:phoenix_pubsub, "~> 2.0"},
+      {:argon2_elixir, "~> 3.0"}
     ]
   end
 
