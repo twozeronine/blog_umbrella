@@ -10,12 +10,12 @@
 import Config
 
 # Configure Mix tasks and generators
-config :blog,
-  ecto_repos: [Blog.Repo]
+config :blog_domain,
+  ecto_repos: [BlogDomain.Repo]
 
 config :blog_web,
-  ecto_repos: [Blog.Repo],
-  generators: [context_app: :blog]
+  ecto_repos: [BlogDomain.Repo],
+  generators: [context_app: :blog_domain]
 
 # Configures the endpoint
 config :blog_web, BlogWeb.Endpoint,

@@ -37,12 +37,13 @@ defmodule BlogWeb.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      {:blog, in_umbrella: true},
+      {:blog_domain, in_umbrella: true},
       {:phoenix, "~> 1.6.12"},
       {:phoenix_ecto, "~> 4.4"},
       {:phoenix_live_dashboard, "~> 0.6"},
       {:telemetry_metrics, "~> 0.6"},
       {:telemetry_poller, "~> 1.0"},
-      {:blog, in_umbrella: true},
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"}
     ]

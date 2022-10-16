@@ -1,14 +1,15 @@
 import Config
 
 # Configure your database
-config :blog, Blog.Repo,
+config :blog_domain, BlogDomain.Repo,
   username: "postgres",
   password: "postgres",
   hostname: "localhost",
   database: "blog_dev",
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
-  pool_size: 10
+  pool_size: 10,
+  port: 25432
 
 # For development, we disable any cache and enable
 # debugging and code reloading.
