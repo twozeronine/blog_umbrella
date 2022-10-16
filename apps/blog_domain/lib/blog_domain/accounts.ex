@@ -30,11 +30,20 @@ defmodule BlogDomain.Accounts do
     Repo.get(User, id, [{:lock, "FOR UPDATE"}])
   end
 
-  def update_user(id, params) do
+  def update_username(id, %{user_name: user_name, password: password}) do
     fn ->
-      case get_user_lock(id) do
-        %User{} = user -> User.changeset(user, params) |> Repo.update()
-        nil -> {:error, nil}
+      user = get_user_lock(id)
+
+      cond do
+        user && Argon2.verify_pass(password, user.password_hash) ->
+          User.changeset(user, %{user_name: user_name, password: password}) |> Repo.update()
+
+        user ->
+          {:error, :invalid_password}
+
+        true ->
+          Argon2.no_user_verify()
+          {:error, :not_found}
       end
     end
     |> Repo.transaction()
