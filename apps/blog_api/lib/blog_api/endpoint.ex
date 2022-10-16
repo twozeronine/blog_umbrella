@@ -1,5 +1,5 @@
-defmodule BlogWeb.Endpoint do
-  use Phoenix.Endpoint, otp_app: :blog_web
+defmodule BlogApi.Endpoint do
+  use Phoenix.Endpoint, otp_app: :blog_api
 
   # The session will be stored in the cookie and signed,
   # this means its contents can be read but not tampered with.
@@ -18,7 +18,7 @@ defmodule BlogWeb.Endpoint do
   # when deploying your static files in production.
   plug Plug.Static,
     at: "/",
-    from: :blog_web,
+    from: :blog_api,
     gzip: false,
     only: ~w(assets fonts images favicon.ico robots.txt)
 
@@ -26,7 +26,7 @@ defmodule BlogWeb.Endpoint do
   # :code_reloader configuration of your endpoint.
   if code_reloading? do
     plug Phoenix.CodeReloader
-    plug Phoenix.Ecto.CheckRepoStatus, otp_app: :blog_web
+    plug Phoenix.Ecto.CheckRepoStatus, otp_app: :blog_api
   end
 
   plug Phoenix.LiveDashboard.RequestLogger,
@@ -44,5 +44,5 @@ defmodule BlogWeb.Endpoint do
   plug Plug.MethodOverride
   plug Plug.Head
   plug Plug.Session, @session_options
-  plug BlogWeb.Router
+  plug BlogApi.Router
 end

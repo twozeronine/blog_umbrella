@@ -16,7 +16,7 @@ config :blog_domain, BlogDomain.Repo,
 
 # We don't run a server during test. If one is required,
 # you can enable the server option below.
-config :blog_web, BlogWeb.Endpoint,
+config :blog_api, BlogApi.Endpoint,
   http: [ip: {127, 0, 0, 1}, port: 4002],
   secret_key_base: "6Cj17Np3w0isXTKfOSz14kmW8tFKBu8RHw8II4HVL1WbOqaQqBO17VNx2ocngSZH",
   server: false

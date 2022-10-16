@@ -1,4 +1,4 @@
-defmodule BlogWeb.ConnCase do
+defmodule BlogApi.ConnCase do
   @moduledoc """
   This module defines the test case to be used by
   tests that require setting up a connection.
@@ -11,7 +11,7 @@ defmodule BlogWeb.ConnCase do
   we enable the SQL sandbox, so changes done to the database
   are reverted at the end of every test. If you are using
   PostgreSQL, you can even run database tests asynchronously
-  by setting `use BlogWeb.ConnCase, async: true`, although
+  by setting `use BlogApi.ConnCase, async: true`, although
   this option is not recommended for other databases.
   """
 
@@ -22,12 +22,12 @@ defmodule BlogWeb.ConnCase do
       # Import conveniences for testing with connections
       import Plug.Conn
       import Phoenix.ConnTest
-      import BlogWeb.ConnCase
+      import BlogApi.ConnCase
 
-      alias BlogWeb.Router.Helpers, as: Routes
+      alias BlogApi.Router.Helpers, as: Routes
 
       # The default endpoint for testing
-      @endpoint BlogWeb.Endpoint
+      @endpoint BlogApi.Endpoint
     end
   end
 

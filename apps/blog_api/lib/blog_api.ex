@@ -1,12 +1,12 @@
-defmodule BlogWeb do
+defmodule BlogApi do
   @moduledoc """
   The entrypoint for defining your web interface, such
   as controllers, views, channels and so on.
 
   This can be used in your application as:
 
-      use BlogWeb, :controller
-      use BlogWeb, :view
+      use BlogApi, :controller
+      use BlogApi, :view
 
   The definitions below will be executed for every view,
   controller, etc, so keep them short and clean, focused
@@ -19,18 +19,18 @@ defmodule BlogWeb do
 
   def controller do
     quote do
-      use Phoenix.Controller, namespace: BlogWeb
+      use Phoenix.Controller, namespace: BlogApi
 
       import Plug.Conn
-      alias BlogWeb.Router.Helpers, as: Routes
+      alias BlogApi.Router.Helpers, as: Routes
     end
   end
 
   def view do
     quote do
       use Phoenix.View,
-        root: "lib/blog_web/templates",
-        namespace: BlogWeb
+        root: "lib/blog_api/templates",
+        namespace: BlogApi
 
       # Import convenience functions from controllers
       import Phoenix.Controller,
@@ -61,8 +61,8 @@ defmodule BlogWeb do
       # Import basic rendering functionality (render, render_layout, etc)
       import Phoenix.View
 
-      import BlogWeb.ErrorHelpers
-      alias BlogWeb.Router.Helpers, as: Routes
+      import BlogApi.ErrorHelpers
+      alias BlogApi.Router.Helpers, as: Routes
     end
   end
 

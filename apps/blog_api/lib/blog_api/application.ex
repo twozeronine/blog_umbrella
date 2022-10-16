@@ -1,4 +1,4 @@
-defmodule BlogWeb.Application do
+defmodule BlogApi.Application do
   # See https://hexdocs.pm/elixir/Application.html
   # for more information on OTP Applications
   @moduledoc false
@@ -9,16 +9,16 @@ defmodule BlogWeb.Application do
   def start(_type, _args) do
     children = [
       # Start the Telemetry supervisor
-      BlogWeb.Telemetry,
+      BlogApi.Telemetry,
       # Start the Endpoint (http/https)
-      BlogWeb.Endpoint
-      # Start a worker by calling: BlogWeb.Worker.start_link(arg)
-      # {BlogWeb.Worker, arg}
+      BlogApi.Endpoint
+      # Start a worker by calling: BlogApi.Worker.start_link(arg)
+      # {BlogApi.Worker, arg}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
-    opts = [strategy: :one_for_one, name: BlogWeb.Supervisor]
+    opts = [strategy: :one_for_one, name: BlogApi.Supervisor]
     Supervisor.start_link(children, opts)
   end
 
@@ -26,7 +26,7 @@ defmodule BlogWeb.Application do
   # whenever the application is updated.
   @impl true
   def config_change(changed, _new, removed) do
-    BlogWeb.Endpoint.config_change(changed, removed)
+    BlogApi.Endpoint.config_change(changed, removed)
     :ok
   end
 end

@@ -13,14 +13,14 @@ import Config
 config :blog_domain,
   ecto_repos: [BlogDomain.Repo]
 
-config :blog_web,
+config :blog_api,
   ecto_repos: [BlogDomain.Repo],
   generators: [context_app: :blog_domain]
 
 # Configures the endpoint
-config :blog_web, BlogWeb.Endpoint,
+config :blog_api, BlogApi.Endpoint,
   url: [host: "localhost"],
-  render_errors: [view: BlogWeb.ErrorView, accepts: ~w(json), layout: false],
+  render_errors: [view: BlogApi.ErrorView, accepts: ~w(json), layout: false],
   pubsub_server: Blog.PubSub,
   live_view: [signing_salt: "Og51exPx"]
 
