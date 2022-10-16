@@ -6,13 +6,13 @@ defmodule BlogDomain.Accounts do
   alias BlogDomain.Repo
   alias BlogDomain.Accounts.User
 
-  def create_user(params) do
+  def create_user(params \\ %{}) do
     %User{}
     |> User.changeset(params)
     |> Repo.insert()
   end
 
-  def create_user!(params) do
+  def create_user!(params \\ %{}) do
     %User{}
     |> User.changeset(params)
     |> Repo.insert!()
