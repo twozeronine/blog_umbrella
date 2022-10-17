@@ -19,5 +19,6 @@ defmodule BlogDomain.Boards.Comment do
     struct
     |> cast(params, [:description])
     |> validate_required([:description])
+    |> foreign_key_constraint(:post_id)
   end
 end

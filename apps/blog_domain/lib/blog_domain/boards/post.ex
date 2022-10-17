@@ -18,5 +18,6 @@ defmodule BlogDomain.Boards.Post do
     struct
     |> cast(params, [:title, :description])
     |> validate_required([:title])
+    |> foreign_key_constraint(:post_id)
   end
 end
