@@ -9,6 +9,7 @@ defmodule BlogDomain.Boards.Post do
     field(:description, :string)
 
     belongs_to(:user, BlogDomain.Accounts.User)
+    has_many(:comments, BlogDomain.Boards.Comment)
 
     timestamps()
   end
