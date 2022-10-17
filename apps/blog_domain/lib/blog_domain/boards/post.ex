@@ -1,6 +1,7 @@
 defmodule BlogDomain.Boards.Post do
   use Ecto.Schema
   import Ecto.Changeset
+  import Ecto.Query
 
   @table "posts"
 
@@ -19,5 +20,9 @@ defmodule BlogDomain.Boards.Post do
     |> cast(params, [:title, :description])
     |> validate_required([:title])
     |> foreign_key_constraint(:post_id)
+  end
+
+  def post_id_query(query, %__MODULE__{id: post_id}) do
+    from(q in query, where: q.post_id == ^post_id)
   end
 end

@@ -1,6 +1,7 @@
 defmodule BlogDomain.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
+  import Ecto.Query
 
   @table "users"
 
@@ -33,5 +34,9 @@ defmodule BlogDomain.Accounts.User do
       _ ->
         changeset
     end
+  end
+
+  def user_id_query(query, %__MODULE__{id: user_id}) do
+    from(q in query, where: q.user_id == ^user_id)
   end
 end
