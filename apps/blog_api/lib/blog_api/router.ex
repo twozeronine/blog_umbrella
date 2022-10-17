@@ -8,7 +8,7 @@ defmodule BlogApi.Router do
   scope "/api", BlogApi do
     pipe_through :api
 
-    resources "/users", UserController
+    resources "/users", UserController, only: [:index, :show, :edit, :create, :update, :delete]
   end
 
   # Enables LiveDashboard only for development
