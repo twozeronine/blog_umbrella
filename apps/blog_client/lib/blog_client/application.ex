@@ -8,13 +8,18 @@ defmodule BlogClient.Application do
   @impl true
   def start(_type, _args) do
     children = [
-      # Starts a worker by calling: BlogClient.Worker.start_link(arg)
-      # {BlogClient.Worker, arg}
+      BlogClient
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
-    opts = [strategy: :one_for_one, name: BlogClient.Supervisor]
+    opts = [
+      {:name, __MODULE__},
+      {:strategy, :one_for_one},
+      {:max_seconds, 1},
+      {:max_restarts, 1_000}
+    ]
+
     Supervisor.start_link(children, opts)
   end
 end
