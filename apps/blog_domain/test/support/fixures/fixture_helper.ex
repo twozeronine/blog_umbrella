@@ -1,5 +1,5 @@
 defmodule BlogDomain.FixtureHelper do
-  alias BlogDomain.{Accounts}
+  alias BlogDomain.{Accounts, Boards}
 
   def user_fixture(attrs \\ %{}) do
     {:ok, user} =
@@ -12,5 +12,19 @@ defmodule BlogDomain.FixtureHelper do
       |> Accounts.create_user()
 
     user
+  end
+
+  def post_fixtrue(owner, attrs \\ %{}) do
+    {:ok, post} =
+      attrs
+      |> Enum.into(%{
+        title: "title",
+        description: "description"
+      })
+      |> then(fn params ->
+        Boards.create_post(owner, params)
+      end)
+
+    post
   end
 end

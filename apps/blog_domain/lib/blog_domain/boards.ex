@@ -95,7 +95,7 @@ defmodule BlogDomain.Boards do
   def update_post_comment(%User{} = user, comment_id, params \\ %{}) do
     fn ->
       case get_user_comment_lock(user, comment_id) do
-        %Post{} = post -> Comment.changeset(post, params) |> Repo.update()
+        %Comment{} = comment -> Comment.changeset(comment, params) |> Repo.update()
         nil -> {:error, :not_found}
       end
     end
