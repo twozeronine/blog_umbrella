@@ -24,6 +24,7 @@ defmodule BlogDomain.DataCase do
       import Ecto.Changeset
       import Ecto.Query
       import BlogDomain.DataCase
+      import BlogDomain.FixtureHelper
     end
   end
 
