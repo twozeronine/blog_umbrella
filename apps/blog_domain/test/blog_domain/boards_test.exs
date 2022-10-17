@@ -80,7 +80,7 @@ defmodule BlogDomain.BoardsTest do
 
       assert {:ok, %Post{} = post} = Boards.create_post(owner, @valid_params)
 
-      assert {:ok, post} = Boards.delete_post(post)
+      assert {:ok, _post} = Boards.delete_post(post)
       assert Boards.list_user_posts(owner) == []
     end
   end
