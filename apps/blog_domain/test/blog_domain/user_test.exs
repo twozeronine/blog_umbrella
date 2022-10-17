@@ -1,5 +1,5 @@
 defmodule BlogDomain.UserTest do
-  use ExUnit.Case, async: true
+  use BlogDomain.DataCase
 
   alias BlogDomain.Accounts.User
 
