@@ -51,6 +51,6 @@ defmodule BlogDomain.Boards do
   end
 
   defp user_posts_query(query, %Accounts.User{id: user_id}) do
-    from(v in query, where: v.user_id == ^user_id)
+    from(p in query, where: p.user_id == ^user_id)
   end
 end
