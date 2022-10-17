@@ -2,6 +2,7 @@ defmodule BlogDomain.Boards.Comment do
   use Ecto.Schema
 
   import Ecto.Changeset
+  import Ecto.Query
 
   @table "comments"
 
@@ -17,8 +18,12 @@ defmodule BlogDomain.Boards.Comment do
 
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:description])
+    |> cast(params, [:description, :user_name])
     |> validate_required([:description])
     |> foreign_key_constraint(:post_id)
+  end
+
+  def comment_user_id_query(query, user_id) do
+    from(q in query, where: q.user_id == ^user_id)
   end
 end
