@@ -50,6 +50,15 @@ defmodule BlogDomain.Accounts do
   end
 
   def delete_user(id) do
-    Repo.delete(id)
+    fn ->
+      user = get_user_lock(id)
+
+      Repo.delete(user)
+    end
+    |> Repo.transaction()
+  end
+
+  def user_list() do
+    Repo.all(User)
   end
 end
