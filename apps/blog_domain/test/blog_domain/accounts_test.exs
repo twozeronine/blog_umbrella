@@ -10,7 +10,6 @@ defmodule BlogDomain.AccountsTest do
       user_email: "User Email",
       password: "supersecret"
     }
-    @invalid_params %{}
 
     test "create user" do
       assert {:ok, %User{id: id} = user} = Accounts.create_user(@valid_params)
@@ -25,7 +24,7 @@ defmodule BlogDomain.AccountsTest do
     end
 
     test "update user" do
-      assert {:ok, %User{id: id, user_name: old_name, password: password} = user} =
+      assert {:ok, %User{id: id, user_name: old_name, password: password}} =
                Accounts.create_user(@valid_params)
 
       new_name = "New User"
