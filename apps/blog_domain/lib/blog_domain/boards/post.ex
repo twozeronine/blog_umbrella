@@ -16,7 +16,6 @@ defmodule BlogDomain.Boards.Post do
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:title, :description])
-    |> cast_assoc(:user)
     |> validate_required([:title])
   end
 end
