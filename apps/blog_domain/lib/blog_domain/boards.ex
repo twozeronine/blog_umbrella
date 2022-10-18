@@ -6,18 +6,16 @@ defmodule BlogDomain.Boards do
   alias BlogDomain.Boards.{Post, Comment}
 
   def create_post(%User{} = user, params \\ %{}) do
-    %Post{}
+    %Post{user_id: user.id}
     |> Post.changeset(params)
-    |> Ecto.Changeset.put_assoc(:user, user)
     |> Repo.insert()
   end
 
   def get_post(id), do: Repo.get(Post, id)
-  def get_post!(id), do: Repo.get!(Post, id)
 
-  def get_user_post(%User{} = user, post_id, opts \\ []) do
+  def get_user_post(%User{id: user_id}, post_id, opts \\ []) do
     Post
-    |> User.user_id_query(user)
+    |> User.user_id_query(user_id)
     |> Repo.get(post_id, opts)
   end
 
@@ -25,9 +23,9 @@ defmodule BlogDomain.Boards do
     get_user_post(user, post_id, lock: "FOR UPDATE")
   end
 
-  def list_user_posts(%User{} = user) do
+  def list_user_posts(%User{id: user_id}) do
     Post
-    |> User.user_id_query(user)
+    |> User.user_id_query(user_id)
     |> Repo.all()
   end
 
@@ -52,11 +50,10 @@ defmodule BlogDomain.Boards do
   end
 
   def get_comment(id), do: Repo.get(Comment, id)
-  def get_comment!(id), do: Repo.get!(Comment, id)
 
-  def get_user_comment(%User{} = user, comment_id, opts \\ []) do
+  def get_user_comment(%User{id: user_id}, comment_id, opts \\ []) do
     Comment
-    |> User.user_id_query(user)
+    |> User.user_id_query(user_id)
     |> Repo.get(comment_id, opts)
   end
 
@@ -65,9 +62,11 @@ defmodule BlogDomain.Boards do
   end
 
   def get_user_post_all_comments(%User{} = user, post_id) do
-    get_user_post(user, post_id)
-    |> Ecto.assoc(:comments)
-    |> Repo.all()
+    post =
+      get_user_post(user, post_id)
+      |> Repo.preload(:comments)
+
+    post.comments
   end
 
   def get_post_user_comments(post_id, user_id) do
@@ -77,15 +76,15 @@ defmodule BlogDomain.Boards do
     |> Repo.all()
   end
 
-  def list_user_comments(%User{} = user) do
+  def list_user_comments(%User{id: user_id}) do
     Comment
-    |> User.user_id_query(user)
+    |> User.user_id_query(user_id)
     |> Repo.all()
   end
 
-  def list_post_comments(%Post{} = post) do
+  def list_post_comments(%Post{id: post_id}) do
     Comment
-    |> Post.post_id_query(post)
+    |> Post.post_id_query(post_id)
     |> Repo.all()
   end
 
