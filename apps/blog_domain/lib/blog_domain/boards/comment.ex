@@ -18,11 +18,12 @@ defmodule BlogDomain.Boards.Comment do
 
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:description, :user_name])
+    |> cast(params, [:description, :user_name, :user_id, :post_id])
     |> cast_assoc(:user)
-    |> cast_assoc(:posts)
+    |> cast_assoc(:post)
     |> validate_required([:description])
     |> foreign_key_constraint(:post_id)
+    |> foreign_key_constraint(:user_id)
   end
 
   def comment_user_id_query(query, user_id) do

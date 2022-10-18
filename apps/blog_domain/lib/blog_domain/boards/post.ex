@@ -17,11 +17,11 @@ defmodule BlogDomain.Boards.Post do
 
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:title, :description])
+    |> cast(params, [:title, :description, :user_id])
     |> cast_assoc(:user)
     |> cast_assoc(:comments)
     |> validate_required([:title])
-    |> foreign_key_constraint(:post_id)
+    |> foreign_key_constraint(:user_id)
   end
 
   def post_id_query(query, post_id) do
