@@ -26,13 +26,6 @@ defmodule BlogDomain.BoardsTest do
       assert %Post{title: ^title, description: ^desc} = Boards.get_post(id)
     end
 
-    test "get_post!" do
-      assert {:ok, %Post{title: title, description: desc, id: id}} =
-               Boards.create_post(user_fixture(), @valid_params)
-
-      assert %Post{title: ^title, description: ^desc} = Boards.get_post(id)
-    end
-
     test "get_user_post" do
       owner = user_fixture()
 
@@ -108,16 +101,6 @@ defmodule BlogDomain.BoardsTest do
                Boards.write_comment(owner, post.id, @valid_params)
 
       assert %Comment{description: ^desc} = Boards.get_comment(id)
-    end
-
-    test "get comment1" do
-      owner = user_fixture()
-      post = post_fixtrue(owner)
-
-      assert {:ok, %Comment{id: id, description: desc}} =
-               Boards.write_comment(owner, post.id, @valid_params)
-
-      assert %Comment{description: ^desc} = Boards.get_comment!(id)
     end
 
     test "get_user_comment" do
