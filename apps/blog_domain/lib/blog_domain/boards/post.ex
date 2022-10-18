@@ -22,7 +22,7 @@ defmodule BlogDomain.Boards.Post do
     |> foreign_key_constraint(:post_id)
   end
 
-  def post_id_query(query, %__MODULE__{id: post_id}) do
+  def post_id_query(query, post_id) do
     from(q in query, where: q.post_id == ^post_id)
   end
 end

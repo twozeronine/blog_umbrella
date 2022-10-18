@@ -20,6 +20,8 @@ defmodule BlogDomain.Accounts.User do
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:user_email, :user_name, :password, :password_hash])
+    |> cast_assoc(:posts)
+    |> cast_assoc(:comments)
     |> validate_length(:user_name, [{:min, 3}, {:max, 64}])
     |> validate_length(:password, [{:min, 8}, {:max, 128}])
     |> put_password_hash()
@@ -37,7 +39,7 @@ defmodule BlogDomain.Accounts.User do
     end
   end
 
-  def user_id_query(query, %__MODULE__{id: user_id}) do
+  def user_id_query(query, user_id) do
     from(q in query, where: q.user_id == ^user_id)
   end
 end
