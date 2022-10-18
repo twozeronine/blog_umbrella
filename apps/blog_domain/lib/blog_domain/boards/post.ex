@@ -18,6 +18,8 @@ defmodule BlogDomain.Boards.Post do
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:title, :description])
+    |> cast_assoc(:user)
+    |> cast_assoc(:comments)
     |> validate_required([:title])
     |> foreign_key_constraint(:post_id)
   end

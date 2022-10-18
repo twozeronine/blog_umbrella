@@ -19,6 +19,8 @@ defmodule BlogDomain.Boards.Comment do
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:description, :user_name])
+    |> cast_assoc(:user)
+    |> cast_assoc(:posts)
     |> validate_required([:description])
     |> foreign_key_constraint(:post_id)
   end
