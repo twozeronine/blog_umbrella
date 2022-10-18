@@ -28,13 +28,16 @@ defmodule BlogApi.UserController do
   #   end
   # end
 
-  # def update(conn, %{"id"=> user_id, "user" => user_params}) do
+  # def update(conn, %{"id" => user_id, "user" => user_params}) do
   #   case Accounts.update_username(user_id, params) do
-  #     {:ok, %User{} = user} ->
+  #     {:ok, {:ok, %User{} = user}} ->
   #       render(conn, "show.json", %{user: user})
 
-  #     {:error, %Ecto.Changeset{} = changeset} ->
-  #       render(conn, "index.json")
+  #     {:ok, {:error, %Ecto.Changeset{} = changeset}} ->
+  #       :error
+
+  #     {:error, _} ->
+  #       :error
   #   end
   # end
 
