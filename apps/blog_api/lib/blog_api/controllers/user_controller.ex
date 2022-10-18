@@ -1,6 +1,9 @@
 defmodule BlogApi.UserController do
   use BlogApi, :controller
 
+  # alias BlogDomain.Accounts
+  # alias BlogDomain.Accounts.User
+
   # def index(conn, _params) do
   #   users = Accounts.user_list()
   #   render(conn, "index.json", users)

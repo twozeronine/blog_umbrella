@@ -9,6 +9,7 @@ defmodule BlogApi.Router do
     pipe_through :api
 
     resources "/users", UserController, only: [:index, :show, :edit, :create, :update, :delete]
+    resources "/posts", PostController, only: [:index, :show, :edit, :create, :update, :delete]
   end
 
   if Mix.env() in [:dev, :test] do
