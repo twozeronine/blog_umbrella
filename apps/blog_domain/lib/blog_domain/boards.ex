@@ -1,7 +1,4 @@
 defmodule BlogDomain.Boards do
-  @moduledoc """
-    Boards context
-  """
   alias BlogDomain.Repo
 
   alias BlogDomain.Accounts

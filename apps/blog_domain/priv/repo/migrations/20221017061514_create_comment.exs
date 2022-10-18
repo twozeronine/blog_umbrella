@@ -3,16 +3,16 @@ defmodule BlogDomain.Repo.Migrations.CreateComment do
 
   @table "comments"
 
-  def change do
+  def change() do
     create table(@table) do
       add(:description, :text, [{:null, false}])
-      add :user_id, references(:users, on_delete: :nothing)
-      add :post_id, references(:posts, on_delete: :delete_all)
+      add(:user_id, references(:users, on_delete: :nothing))
+      add(:post_id, references(:posts, on_delete: :delete_all))
 
       timestamps()
     end
 
-    create index(:comments, :user_id)
-    create index(:comments, :post_id)
+    create index(@table, :user_id)
+    create index(@table, :post_id)
   end
 end

@@ -3,7 +3,7 @@ defmodule BlogDomain.Repo.Migrations.User do
 
   @table "users"
 
-  def change do
+  def change() do
     create table(@table) do
       add(:user_email, :string, [{:null, false}])
       add(:user_name, :string, [{:null, false}])
