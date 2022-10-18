@@ -1,23 +1,46 @@
 defmodule BlogApi.UserController do
   use BlogApi, :controller
 
-  def index(conn, _params) do
-    # users = Accounts.user_list
-    # render(conn, "index.json", users: users)
-    render(conn, "index.json",
-      users: [%{user_name: "1", user_email: "2"}, %{user_name: "1", user_email: "2"}]
-    )
-  end
+  # def index(conn, _params) do
+  #   users = Accounts.user_list()
+  #   render(conn, "index.json", users)
+  # end
 
-  # def create(conn, params) do
-  #   case Accounts.create_user(params) do
-  #     {:ok, user} ->
+  # def show(conn, %{"id" => id}) do
+  #   user = Accounts.get_user(id)
+  #   render(conn, "show.json", %{user: user})
+  # end
+
+  # def create(conn, %{"user" => user_params}) do
+  #   case Accounts.create_user(user_params) do
+  #     {:ok, %User{} = user} ->
   #       conn
   #       # |> 로그인 로직
-  #       |> render("index.json")
+  #       # |> put_status(:created)
+  #       # |> put_resp_header("location", Routes.user_path(conn, :show, user))
+  #       # |> render("index.json")
 
   #     {:error, %Ecto.Changeset{} = changeset} ->
   #       render(conn, "index.json")
+  #   end
+  # end
+
+  # def update(conn, %{"id"=> user_id, "user" => user_params}) do
+  #   case Accounts.update_username(user_id, params) do
+  #     {:ok, %User{} = user} ->
+  #       render(conn, "show.json", %{user: user})
+
+  #     {:error, %Ecto.Changeset{} = changeset} ->
+  #       render(conn, "index.json")
+  #   end
+  # end
+
+  # def delete(conn, %{"id" => id}) do
+  #   # 현재 세션에서 user 가져오는 로직
+  #   # 또는 아이디로 유저를 가져와서 삭제 ??
+  #   case Accounts.delete_user(user) do
+  #     {:ok, %User{}} -> send_resp(conn, :no_content, "")
+  #     _ -> :error
   #   end
   # end
 end
