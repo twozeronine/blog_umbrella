@@ -29,4 +29,8 @@ defmodule BlogDomain.Boards.Comment do
   def comment_user_id_query(query, user_id) do
     from(q in query, where: q.user_id == ^user_id)
   end
+
+  def comment_user_id(user_id) do
+    from(c in __MODULE__, where: c.user_id == ^user_id)
+  end
 end

@@ -70,10 +70,11 @@ defmodule BlogDomain.Boards do
   end
 
   def get_post_user_comments(post_id, user_id) do
-    get_post(post_id)
-    |> Ecto.assoc(:comments)
-    |> Comment.comment_user_id_query(user_id)
-    |> Repo.all()
+    post =
+      get_post(post_id)
+      |> Repo.preload(comments: Comment.comment_user_id(user_id))
+
+    post.comments
   end
 
   def list_user_comments(%User{id: user_id}) do
