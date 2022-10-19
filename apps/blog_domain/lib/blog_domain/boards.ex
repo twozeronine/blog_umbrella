@@ -67,6 +67,18 @@ defmodule BlogDomain.Boards do
     |> Repo.get(comment_id)
   end
 
+  def get_post_comment(post_id, comment_id) do
+    Post
+    |> Post.get_comment_in_post_query(post_id, comment_id)
+    |> Repo.one()
+  end
+
+  def get_post_comments(post_id) do
+    Post
+    |> Post.get_all_comments_in_post_query(post_id)
+    |> Repo.all()
+  end
+
   def get_user_post_all_comments(%User{id: user_id}, post_id) do
     Post
     |> User.user_id_query(user_id)
@@ -77,6 +89,11 @@ defmodule BlogDomain.Boards do
   def get_post_usercomments(post_id, user_id) do
     Post
     |> Post.get_post_join_user_comments_query(post_id, user_id)
+    |> Repo.all()
+  end
+
+  def comment_list() do
+    Comment
     |> Repo.all()
   end
 
