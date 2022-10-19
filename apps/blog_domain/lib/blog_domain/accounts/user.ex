@@ -19,7 +19,7 @@ defmodule BlogDomain.Accounts.User do
 
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:user_email, :user_name, :password, :password_hash])
+    |> cast(params, [:user_email, :user_name, :password])
     |> cast_assoc(:posts)
     |> cast_assoc(:comments)
     |> validate_length(:user_name, [{:min, 3}, {:max, 64}])
