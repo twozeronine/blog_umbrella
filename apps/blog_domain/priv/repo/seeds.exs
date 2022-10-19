@@ -1,9 +1,4 @@
-# alias BlogDomain.Repo
-# alias BlogDomain.Accounts.User
 alias BlogDomain.Accounts
-# alias BlogDomain.Boards
-# alias BlogDomain.Boards.Comment
-# alias BlogDomain.Boards.Post
 
 %{
   user_email: "example@example.com",
