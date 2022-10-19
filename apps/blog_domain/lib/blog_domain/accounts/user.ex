@@ -29,6 +29,14 @@ defmodule BlogDomain.Accounts.User do
     |> unique_constraint([:user_email])
   end
 
+  def user_id_query(query, user_id) do
+    from(q in query, [{:where, q.user_id == ^user_id}])
+  end
+
+  def user_lock_query(query) do
+    from(q in query, [{:lock, "FOR UPDATE"}])
+  end
+
   defp put_password_hash(changeset) do
     case changeset do
       %Ecto.Changeset{valid?: true, changes: %{password: password}} ->
@@ -37,13 +45,5 @@ defmodule BlogDomain.Accounts.User do
       _ ->
         changeset
     end
-  end
-
-  def user_id_query(query, user_id) do
-    from(q in query, [{:where, q.user_id == ^user_id}])
-  end
-
-  def user_lock_query(query) do
-    from(q in query, [{:lock, "FOR UPDATE"}])
   end
 end

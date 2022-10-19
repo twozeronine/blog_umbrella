@@ -89,7 +89,6 @@ defmodule BlogDomain.BoardsTest do
 
       assert {:ok, %Comment{} = comment} = Boards.write_comment(owner, post.id, @valid_params)
 
-      assert comment.user_name == owner.user_name
       assert comment.description == "desc"
     end
 
@@ -162,11 +161,11 @@ defmodule BlogDomain.BoardsTest do
       assert [
                %Comment{id: ^id1, description: ^desc1},
                %Comment{id: ^id2, description: ^desc2}
-             ] = Boards.get_post_user_comments(post.id, owner1.id)
+             ] = Boards.get_post_usercomments(post.id, owner1.id)
 
       assert [
                %Comment{id: ^id3, description: ^desc3}
-             ] = Boards.get_post_user_comments(post.id, owner2.id)
+             ] = Boards.get_post_usercomments(post.id, owner2.id)
     end
 
     test "list_user_comments" do

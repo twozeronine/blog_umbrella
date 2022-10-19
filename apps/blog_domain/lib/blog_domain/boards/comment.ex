@@ -18,7 +18,7 @@ defmodule BlogDomain.Boards.Comment do
 
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:description, :user_name, :user_id, :post_id])
+    |> cast(params, [:description, :user_id, :post_id])
     |> cast_assoc(:user)
     |> cast_assoc(:post)
     |> validate_required([:description])
@@ -27,10 +27,17 @@ defmodule BlogDomain.Boards.Comment do
   end
 
   def comment_user_id_query(query, user_id) do
-    from(q in query, where: q.user_id == ^user_id)
+    from(q in query, [{:where, q.user_id == ^user_id}])
   end
 
-  def comment_user_id(user_id) do
-    from(c in __MODULE__, where: c.user_id == ^user_id)
+  def comment_lock_query(query) do
+    from(q in query, [{:lock, "FOR UPDATE"}])
+  end
+
+  def get_comment_user_name(id) do
+    from q in __MODULE__,
+      where: q.id == ^id,
+      join: u in assoc(q, :user),
+      select: %{user_name: u.user_name}
   end
 end

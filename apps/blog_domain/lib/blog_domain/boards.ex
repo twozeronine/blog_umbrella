@@ -1,26 +1,28 @@
 defmodule BlogDomain.Boards do
   alias BlogDomain.Repo
 
-  alias BlogDomain.Accounts
   alias BlogDomain.Accounts.User
   alias BlogDomain.Boards.{Post, Comment}
 
-  def create_post(%User{} = user, params \\ %{}) do
-    %Post{user_id: user.id}
+  def create_post(%User{id: user_id}, params \\ %{}) do
+    %Post{user_id: user_id}
     |> Post.changeset(params)
     |> Repo.insert()
   end
 
   def get_post(id), do: Repo.get(Post, id)
 
-  def get_user_post(%User{id: user_id}, post_id, opts \\ []) do
+  def get_user_post(%User{id: user_id}, post_id) do
     Post
     |> User.user_id_query(user_id)
-    |> Repo.get(post_id, opts)
+    |> Repo.get(post_id)
   end
 
-  def get_user_post_lock(%User{} = user, post_id) do
-    get_user_post(user, post_id, lock: "FOR UPDATE")
+  def get_user_post_lock(%User{id: user_id}, post_id) do
+    Post
+    |> User.user_id_query(user_id)
+    |> Post.post_lock_query()
+    |> Repo.get(post_id)
   end
 
   def list_user_posts(%User{id: user_id}) do
@@ -43,22 +45,23 @@ defmodule BlogDomain.Boards do
     Repo.delete(post)
   end
 
-  def write_comment(%Accounts.User{id: user_id, user_name: user_name}, post_id, params \\ %{}) do
+  def write_comment(%User{id: user_id}, post_id, params \\ %{}) do
     %Comment{user_id: user_id, post_id: post_id}
-    |> Comment.changeset(Map.put(params, :user_name, user_name))
+    |> Comment.changeset(params)
     |> Repo.insert()
+  end
+
+  def get_comment_user_name(id) do
+    Comment.get_comment_user_name(id)
+    |> Repo.one()
   end
 
   def get_comment(id), do: Repo.get(Comment, id)
 
-  def get_user_comment(%User{id: user_id}, comment_id, opts \\ []) do
+  def get_user_comment(%User{id: user_id}, comment_id) do
     Comment
     |> User.user_id_query(user_id)
-    |> Repo.get(comment_id, opts)
-  end
-
-  def get_user_comment_lock(%User{} = user, comment_id) do
-    get_user_comment(user, comment_id, lock: "FOR UPDATE")
+    |> Repo.get(comment_id)
   end
 
   def get_user_post_all_comments(%User{} = user, post_id) do
@@ -69,12 +72,10 @@ defmodule BlogDomain.Boards do
     post.comments
   end
 
-  def get_post_user_comments(post_id, user_id) do
-    post =
-      get_post(post_id)
-      |> Repo.preload(comments: Comment.comment_user_id(user_id))
-
-    post.comments
+  def get_post_usercomments(post_id, user_id) do
+    Post
+    |> Post.get_post_join_user_comments_query(post_id, user_id)
+    |> Repo.all()
   end
 
   def list_user_comments(%User{id: user_id}) do
@@ -101,5 +102,12 @@ defmodule BlogDomain.Boards do
 
   def delete_comment(%Comment{} = comment) do
     Repo.delete(comment)
+  end
+
+  defp get_user_comment_lock(%User{id: user_id}, comment_id) do
+    Comment
+    |> User.user_id_query(user_id)
+    |> Comment.comment_lock_query()
+    |> Repo.get(comment_id)
   end
 end

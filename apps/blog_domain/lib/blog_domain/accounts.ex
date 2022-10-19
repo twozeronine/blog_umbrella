@@ -12,12 +12,6 @@ defmodule BlogDomain.Accounts do
     Repo.get(User, id)
   end
 
-  def get_user_lock(id) do
-    User
-    |> User.user_lock_query()
-    |> Repo.get(id)
-  end
-
   def update_user(%User{} = user, params) do
     fn ->
       user.id
@@ -34,5 +28,11 @@ defmodule BlogDomain.Accounts do
 
   def user_list() do
     Repo.all(User)
+  end
+
+  defp get_user_lock(id) do
+    User
+    |> User.user_lock_query()
+    |> Repo.get(id)
   end
 end

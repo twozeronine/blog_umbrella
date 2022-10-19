@@ -25,6 +25,19 @@ defmodule BlogDomain.Boards.Post do
   end
 
   def post_id_query(query, post_id) do
-    from(q in query, where: q.post_id == ^post_id)
+    from(q in query, [{:where, q.post_id == ^post_id}])
+  end
+
+  def get_post_join_user_comments_query(query, post_id, user_id) do
+    from(q in query, [
+      {:where, q.id == ^post_id},
+      {:join, c in assoc(q, :comments)},
+      {:where, c.user_id == ^user_id},
+      {:select, c}
+    ])
+  end
+
+  def post_lock_query(query) do
+    from(q in query, [{:lock, "FOR UPDATE"}])
   end
 end
