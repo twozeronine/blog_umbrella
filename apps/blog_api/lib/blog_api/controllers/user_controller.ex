@@ -38,6 +38,12 @@ defmodule BlogApi.UserController do
       {:ok, {:error, %Ecto.Changeset{} = changeset}} ->
         conn |> render("errors.json", %{errors: Utils.format_changeset_errors(changeset)})
 
+      {:ok, {:error, :not_found}} ->
+        conn
+        |> put_status(:not_found)
+        |> put_view(BlogApi.ErrorView)
+        |> render(:"404")
+
       {:error, _} ->
         conn |> render("errors.json", %{errors: Utils.internal_server_error()})
     end

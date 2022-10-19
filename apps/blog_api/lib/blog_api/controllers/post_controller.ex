@@ -36,6 +36,12 @@ defmodule BlogApi.PostController do
       {:ok, {:ok, %Post{} = post}} ->
         render(conn, "show.json", %{post: post})
 
+      {:ok, {:error, :not_found}} ->
+        conn
+        |> put_status(:not_found)
+        |> put_view(BlogApi.ErrorView)
+        |> render(:"404")
+
       {:ok, {:error, %Ecto.Changeset{} = changeset}} ->
         conn |> render("errors.json", %{errors: Utils.format_changeset_errors(changeset)})
 
