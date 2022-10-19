@@ -42,13 +42,4 @@ defmodule BlogApi.UserController do
         conn |> render("errors.json", %{errors: "Internal Server Error"})
     end
   end
-
-  def delete(conn, %{"id" => id}) do
-    user = Accounts.get_user(id)
-
-    case Accounts.delete_user(user) do
-      {:ok, %User{}} -> send_resp(conn, :no_content, "")
-      _ -> conn |> render("errors.json", %{errors: "Internal Server Error"})
-    end
-  end
 end
