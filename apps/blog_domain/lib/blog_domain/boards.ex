@@ -64,12 +64,11 @@ defmodule BlogDomain.Boards do
     |> Repo.get(comment_id)
   end
 
-  def get_user_post_all_comments(%User{} = user, post_id) do
-    post =
-      get_user_post(user, post_id)
-      |> Repo.preload(:comments)
-
-    post.comments
+  def get_user_post_all_comments(%User{id: user_id}, post_id) do
+    Post
+    |> User.user_id_query(user_id)
+    |> Post.get_all_comments_in_post_query(post_id)
+    |> Repo.all()
   end
 
   def get_post_usercomments(post_id, user_id) do
