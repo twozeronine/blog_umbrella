@@ -12,7 +12,7 @@ defmodule BlogDomain.Accounts do
     Repo.get(User, id)
   end
 
-  def update_user(%User{id: id}, params) do
+  def update_user(%User{id: id}, params \\ %{}) do
     fn ->
       id
       |> get_user_lock()
