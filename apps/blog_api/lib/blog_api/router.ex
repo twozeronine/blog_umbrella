@@ -10,10 +10,11 @@ defmodule BlogApi.Router do
 
     resources "/users", UserController, only: [:index, :show, :update]
     post "/register", UserController, :register
+
     resources "/posts", PostController, only: [:index, :show, :create, :update, :delete]
 
-    resources "/comments", CommentController,
-      only: [:index, :show, :edit, :create, :update, :delete]
+    resources "/posts/:post_id/comments", CommentController,
+      only: [:index, :show, :create, :update, :delete]
   end
 
   if Mix.env() in [:dev, :test] do
