@@ -35,6 +35,21 @@ defmodule BlogDomain.BoardsTest do
       assert %Post{title: ^title, description: ^desc} = Boards.get_user_post(owner, id)
     end
 
+    test "post_list" do
+      owner = user_fixture()
+
+      assert {:ok, %Post{title: title1, description: desc1}} =
+               Boards.create_post(owner, %{title: "title1", description: "desc1"})
+
+      assert {:ok, %Post{title: title2, description: desc2}} =
+               Boards.create_post(owner, %{title: "title2", description: "desc2"})
+
+      assert [
+               %Post{title: ^title1, description: ^desc1},
+               %Post{title: ^title2, description: ^desc2}
+             ] = Boards.post_list()
+    end
+
     test "list_user_posts" do
       owner = user_fixture()
 
@@ -50,17 +65,17 @@ defmodule BlogDomain.BoardsTest do
              ] = Boards.list_user_posts(owner)
     end
 
-    test "update_user_post" do
+    test "update_post" do
       owner = user_fixture()
 
       assert {:ok, %Post{title: title, id: id}} = Boards.create_post(owner, @valid_params)
 
       tasks = [
-        Task.async(fn -> Boards.update_user_post(owner, id, %{title: "new title first"}) end),
-        Task.async(fn -> Boards.update_user_post(owner, id, %{title: "new title second"}) end),
-        Task.async(fn -> Boards.update_user_post(owner, id, %{title: "new title third"}) end),
-        Task.async(fn -> Boards.update_user_post(owner, id, %{title: "new title 4th"}) end),
-        Task.async(fn -> Boards.update_user_post(owner, id, %{title: "new title 5th"}) end)
+        Task.async(fn -> Boards.update_post(id, %{title: "new title first"}) end),
+        Task.async(fn -> Boards.update_post(id, %{title: "new title second"}) end),
+        Task.async(fn -> Boards.update_post(id, %{title: "new title third"}) end),
+        Task.async(fn -> Boards.update_post(id, %{title: "new title 4th"}) end),
+        Task.async(fn -> Boards.update_post(id, %{title: "new title 5th"}) end)
       ]
 
       Task.await_many(tasks)
