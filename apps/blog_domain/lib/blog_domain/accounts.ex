@@ -12,10 +12,10 @@ defmodule BlogDomain.Accounts do
 
   def update_user(%User{id: id}, params \\ %{}) do
     fn ->
-      id
-      |> get_user_lock()
-      |> User.changeset(params)
-      |> Repo.update()
+      case get_user_lock(id) do
+        %User{} = user -> User.changeset(user, params) |> Repo.update()
+        nil -> {:error, :not_found}
+      end
     end
     |> Repo.transaction()
   end
