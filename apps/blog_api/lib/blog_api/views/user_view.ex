@@ -6,7 +6,7 @@ defmodule BlogApi.UserView do
   end
 
   def render("show.json", %{user: user}) do
-    %{data: render_one(user, BlogApi.UserView, "user.json")}
+    %{data: render_one(user, __MODULE__, "user.json")}
   end
 
   def render("user.json", %{user: user}) do
@@ -15,4 +15,7 @@ defmodule BlogApi.UserView do
       user_email: user.user_email
     }
   end
+
+  def render("errors.json", %{errors: errors}), do: %{success: false, errors: errors}
+  def render("error.json", %{error: error}), do: %{success: false, error: error}
 end
