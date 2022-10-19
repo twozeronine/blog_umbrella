@@ -1,5 +1,5 @@
 defmodule BlogApi do
-  def controller do
+  def controller() do
     quote do
       use Phoenix.Controller, namespace: BlogApi
 
@@ -8,7 +8,7 @@ defmodule BlogApi do
     end
   end
 
-  def view do
+  def view() do
     quote do
       use Phoenix.View,
         root: "lib/blog_api/templates",
@@ -21,7 +21,7 @@ defmodule BlogApi do
     end
   end
 
-  def router do
+  def router() do
     quote do
       use Phoenix.Router
 
@@ -30,13 +30,13 @@ defmodule BlogApi do
     end
   end
 
-  def channel do
+  def channel() do
     quote do
       use Phoenix.Channel
     end
   end
 
-  defp view_helpers do
+  defp view_helpers() do
     quote do
       import Phoenix.View
 

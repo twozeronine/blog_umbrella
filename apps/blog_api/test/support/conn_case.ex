@@ -9,7 +9,6 @@ defmodule BlogApi.ConnCase do
 
       alias BlogApi.Router.Helpers, as: Routes
 
-      # The default endpoint for testing
       @endpoint BlogApi.Endpoint
     end
   end

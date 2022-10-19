@@ -8,7 +8,7 @@ defmodule BlogApi.Application do
       BlogApi.Endpoint
     ]
 
-    opts = [strategy: :one_for_one, name: BlogApi.Supervisor]
+    opts = [strategy: :one_for_one, name: __MODULE__]
     Supervisor.start_link(children, opts)
   end
 

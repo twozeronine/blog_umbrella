@@ -1,7 +1,7 @@
 defmodule BlogApi.MixProject do
   use Mix.Project
 
-  def project do
+  def project() do
     [
       app: :blog_api,
       version: "0.1.0",
@@ -18,7 +18,7 @@ defmodule BlogApi.MixProject do
     ]
   end
 
-  def application do
+  def application() do
     [
       mod: {BlogApi.Application, []},
       extra_applications: [:logger, :runtime_tools]
@@ -28,7 +28,7 @@ defmodule BlogApi.MixProject do
   defp elixirc_paths(:test), do: ["lib", "test/support"]
   defp elixirc_paths(_), do: ["lib"]
 
-  defp deps do
+  defp deps() do
     [
       {:blog, in_umbrella: true},
       {:blog_domain, in_umbrella: true},
@@ -43,7 +43,7 @@ defmodule BlogApi.MixProject do
     ]
   end
 
-  defp aliases do
+  defp aliases() do
     [
       setup: ["deps.get"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"]
