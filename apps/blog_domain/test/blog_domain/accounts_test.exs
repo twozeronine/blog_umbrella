@@ -24,11 +24,11 @@ defmodule BlogDomain.AccountsTest do
     end
 
     test "update user" do
-      assert {:ok, %User{id: id, user_name: old_name}} = Accounts.create_user(@valid_params)
+      assert {:ok, %User{user_name: old_name} = user} = Accounts.create_user(@valid_params)
 
       new_name = "New User"
 
-      assert {:ok, {:ok, new_user}} = Accounts.update_username(id, %{user_name: new_name})
+      assert {:ok, {:ok, new_user}} = Accounts.update_user(user, %{user_name: new_name})
 
       refute old_name == new_user.user_name
     end

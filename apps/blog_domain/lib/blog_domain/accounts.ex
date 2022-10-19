@@ -13,14 +13,16 @@ defmodule BlogDomain.Accounts do
   end
 
   def get_user_lock(id) do
-    Repo.get(User, id, [{:lock, "FOR UPDATE"}])
+    User
+    |> User.user_lock_query()
+    |> Repo.get(id)
   end
 
-  def update_username(id, %{user_name: user_name}) do
+  def update_user(%User{} = user, params) do
     fn ->
-      user = get_user_lock(id)
-
-      User.changeset(user, %{user_name: user_name})
+      user.id
+      |> get_user_lock()
+      |> User.changeset(params)
       |> Repo.update()
     end
     |> Repo.transaction()

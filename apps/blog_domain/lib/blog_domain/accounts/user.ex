@@ -40,6 +40,10 @@ defmodule BlogDomain.Accounts.User do
   end
 
   def user_id_query(query, user_id) do
-    from(q in query, where: q.user_id == ^user_id)
+    from(q in query, [{:where, q.user_id == ^user_id}])
+  end
+
+  def user_lock_query(query) do
+    from(q in query, [{:lock, "FOR UPDATE"}])
   end
 end
