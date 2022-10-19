@@ -257,5 +257,14 @@ defmodule BlogDomain.BoardsTest do
       assert {:ok, _comment} = Boards.delete_comment(comment)
       assert [] == Boards.list_user_comments(owner)
     end
+
+    test "get_comment_user_name" do
+      owner = user_fixture()
+      post = post_fixtrue(owner)
+
+      assert {:ok, %Comment{id: id}} = Boards.write_comment(owner, post.id, @valid_params)
+
+      assert %{user_name: "username"} = Boards.get_comment_user_name(id)
+    end
   end
 end
