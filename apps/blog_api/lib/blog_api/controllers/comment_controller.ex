@@ -7,7 +7,7 @@ defmodule BlogApi.CommentController do
   alias BlogDomain.Accounts
 
   def index(conn, %{"post_id" => post_id}) do
-    comments = Boards.get_post_comments(post_id)
+    comments = Boards.list_post_comments(post_id)
     render(conn, "index.json", %{comments: comments})
   end
 

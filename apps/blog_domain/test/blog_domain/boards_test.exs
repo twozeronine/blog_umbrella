@@ -234,7 +234,7 @@ defmodule BlogDomain.BoardsTest do
                %Comment{id: ^id1, description: ^desc1},
                %Comment{id: ^id2, description: ^desc2},
                %Comment{id: ^id3, description: ^desc3}
-             ] = Boards.list_post_comments(post)
+             ] = Boards.list_post_comments(post.id)
     end
 
     test "update_post_comment" do
@@ -280,6 +280,27 @@ defmodule BlogDomain.BoardsTest do
       assert {:ok, %Comment{id: id}} = Boards.write_comment(owner, post.id, @valid_params)
 
       assert %{user_name: "username"} = Boards.get_comment_user_name(id)
+    end
+
+    test "get_post_comment" do
+      owner1 = user_fixture()
+      post = post_fixtrue(owner1)
+      owner2 = user_fixture()
+
+      assert {:ok, %Comment{id: id1}} =
+               Boards.write_comment(owner1, post.id, %{
+                 description: "1번 오너"
+               })
+
+      assert {:ok, %Comment{}} =
+               Boards.write_comment(owner2, post.id, %{
+                 description: "2번 오너"
+               })
+
+      assert %Comment{id: ^id1} = Boards.get_post_comment(post.id, id1)
+    end
+
+    test "comment_list" do
     end
   end
 end
