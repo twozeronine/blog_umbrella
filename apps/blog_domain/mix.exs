@@ -1,7 +1,7 @@
 defmodule BlogDomain.MixProject do
   use Mix.Project
 
-  def project do
+  def project() do
     [
       app: :blog_domain,
       version: "0.1.0",
@@ -17,7 +17,7 @@ defmodule BlogDomain.MixProject do
     ]
   end
 
-  def application do
+  def application() do
     [
       extra_applications: [:logger, :runtime_tools],
       mod: {BlogDomain.Application, []}
@@ -27,7 +27,7 @@ defmodule BlogDomain.MixProject do
   defp elixirc_paths(:test), do: ["lib", "test/support"]
   defp elixirc_paths(_), do: ["lib"]
 
-  defp deps do
+  defp deps() do
     [
       {:blog, in_umbrella: true},
       {:ecto_sql, "~> 3.6"},
@@ -36,7 +36,7 @@ defmodule BlogDomain.MixProject do
     ]
   end
 
-  defp aliases do
+  defp aliases() do
     [
       setup: ["deps.get", "ecto.setup"],
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],

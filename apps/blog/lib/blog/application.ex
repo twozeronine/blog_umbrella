@@ -7,6 +7,6 @@ defmodule Blog.Application do
       {Phoenix.PubSub, name: Blog.PubSub}
     ]
 
-    Supervisor.start_link(children, strategy: :one_for_one, name: Blog.Supervisor)
+    Supervisor.start_link(children, strategy: :one_for_one, name: __MODULE__)
   end
 end

@@ -1,7 +1,7 @@
 defmodule Blog.MixProject do
   use Mix.Project
 
-  def project do
+  def project() do
     [
       app: :blog,
       version: "0.1.0",
@@ -16,21 +16,21 @@ defmodule Blog.MixProject do
     ]
   end
 
-  def application do
+  def application() do
     [
       mod: {Blog.Application, []},
       extra_applications: [:logger, :runtime_tools]
     ]
   end
 
-  defp deps do
+  defp deps() do
     [
       {:phoenix_pubsub, "~> 2.0"},
       {:argon2_elixir, "~> 3.0"}
     ]
   end
 
-  defp aliases do
+  defp aliases() do
     [
       setup: ["deps.get"]
     ]
