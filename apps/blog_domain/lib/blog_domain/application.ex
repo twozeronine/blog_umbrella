@@ -7,7 +7,7 @@ defmodule BlogDomain.Application do
       BlogDomain.Repo
     ]
 
-    opts = [strategy: :one_for_one, name: BlogDomain.Supervisor]
+    opts = [strategy: :one_for_one, name: __MODULE__]
     Supervisor.start_link(children, opts)
   end
 end
