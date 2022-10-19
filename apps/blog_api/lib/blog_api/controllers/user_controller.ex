@@ -39,7 +39,7 @@ defmodule BlogApi.UserController do
         conn |> render("errors.json", %{errors: Utils.format_changeset_errors(changeset)})
 
       {:error, _} ->
-        conn |> render("errors.json", %{errors: "Internal Server Error"})
+        conn |> render("errors.json", %{errors: Utils.internal_server_error()})
     end
   end
 end
