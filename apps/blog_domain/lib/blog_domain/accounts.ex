@@ -8,9 +8,7 @@ defmodule BlogDomain.Accounts do
     |> Repo.insert()
   end
 
-  def get_user(id) do
-    Repo.get(User, id)
-  end
+  def get_user(id), do: Repo.get(User, id)
 
   def update_user(%User{id: id}, params \\ %{}) do
     fn ->
@@ -22,13 +20,9 @@ defmodule BlogDomain.Accounts do
     |> Repo.transaction()
   end
 
-  def delete_user(%User{} = user) do
-    Repo.delete(user)
-  end
+  def delete_user(%User{} = user), do: Repo.delete(user)
 
-  def user_list() do
-    Repo.all(User)
-  end
+  def user_list(), do: Repo.all(User)
 
   defp get_user_lock(id) do
     User

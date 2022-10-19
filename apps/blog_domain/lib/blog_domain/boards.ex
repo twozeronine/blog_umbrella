@@ -41,9 +41,7 @@ defmodule BlogDomain.Boards do
     |> Repo.transaction()
   end
 
-  def delete_post(%Post{} = post) do
-    Repo.delete(post)
-  end
+  def delete_post(%Post{} = post), do: Repo.delete(post)
 
   def write_comment(%User{id: user_id}, post_id, params \\ %{}) do
     %Comment{user_id: user_id, post_id: post_id}
@@ -52,7 +50,8 @@ defmodule BlogDomain.Boards do
   end
 
   def get_comment_user_name(id) do
-    Comment.get_comment_user_name(id)
+    id
+    |> Comment.get_comment_user_name()
     |> Repo.one()
   end
 
@@ -99,9 +98,7 @@ defmodule BlogDomain.Boards do
     |> Repo.transaction()
   end
 
-  def delete_comment(%Comment{} = comment) do
-    Repo.delete(comment)
-  end
+  def delete_comment(%Comment{} = comment), do: Repo.delete(comment)
 
   defp get_user_comment_lock(%User{id: user_id}, comment_id) do
     Comment
