@@ -14,7 +14,7 @@ defmodule BlogApi.FixtureHelper do
     user
   end
 
-  def post_fixtrue(owner, attrs \\ %{}) do
+  def post_fixture(owner, attrs \\ %{}) do
     {:ok, post} =
       attrs
       |> Enum.into(%{

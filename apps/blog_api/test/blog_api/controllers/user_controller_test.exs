@@ -32,7 +32,7 @@ defmodule BlogApi.UserControllerTest do
   end
 
   test "GET /users/:id", %{conn: conn} do
-    %User{id: user_id} = user = user_fixture(@valid_params)
+    %User{id: user_id} = user_fixture(@valid_params)
 
     conn = get(conn, Routes.user_path(conn, :show, user_id))
 
@@ -47,7 +47,7 @@ defmodule BlogApi.UserControllerTest do
              json_response(conn, 201)
   end
 
-  test "UPDATE /", %{conn: conn} do
+  test "UPDATE /users/:id", %{conn: conn} do
     %User{id: id} = user_fixture(@valid_params)
 
     conn =
