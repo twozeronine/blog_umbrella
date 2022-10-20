@@ -1,8 +1,4 @@
 defmodule BlogClient.Application do
-  # See https://hexdocs.pm/elixir/Application.html
-  # for more information on OTP Applications
-  @moduledoc false
-
   use Application
 
   @impl true
@@ -11,8 +7,6 @@ defmodule BlogClient.Application do
       BlogClient
     ]
 
-    # See https://hexdocs.pm/elixir/Supervisor.html
-    # for other strategies and supported options
     opts = [
       {:name, __MODULE__},
       {:strategy, :one_for_one},
