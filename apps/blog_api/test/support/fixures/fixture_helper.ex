@@ -27,4 +27,17 @@ defmodule BlogApi.FixtureHelper do
 
     post
   end
+
+  def comment_fixture(onwer, owner_post_id, attrs \\ {}) do
+    {:ok, comment} =
+      attrs
+      |> Enum.into(%{
+        description: "desc"
+      })
+      |> then(fn params ->
+        Boards.write_comment(onwer, owner_post_id, params)
+      end)
+
+    comment
+  end
 end

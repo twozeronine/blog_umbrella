@@ -32,10 +32,10 @@ defmodule BlogApi.CommentController do
     end
   end
 
-  def update(conn, %{"user" => %{"id" => id}, "comment" => comment}) do
+  def update(conn, %{"user" => %{"id" => id}, "id" => comment_id, "comment" => comment}) do
     user = Accounts.get_user(id)
 
-    case Boards.update_post_comment(user, comment.id, comment) do
+    case Boards.update_post_comment(user, comment_id, comment) do
       {:ok, {:ok, %Comment{} = comment}} ->
         render(conn, "show.json", %{comment: comment})
 
