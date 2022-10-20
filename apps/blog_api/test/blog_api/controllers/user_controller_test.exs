@@ -55,11 +55,17 @@ defmodule BlogApi.UserControllerTest do
         conn,
         Routes.user_path(conn, :update, id, %{
           "user_email" => "New Email",
-          "user_name" => "New User"
+          "user_name" => "New User",
+          "password" => "New Password"
         })
       )
 
-    assert %{"data" => %{"user_email" => "New Email", "user_name" => "New User"}} ==
+    assert %{
+             "data" => %{
+               "user_email" => "New Email",
+               "user_name" => "New User"
+             }
+           } ==
              json_response(conn, 200)
   end
 end
