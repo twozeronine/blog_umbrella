@@ -34,17 +34,16 @@ defmodule BlogApi.UserController do
     end
   end
 
-  def update(conn, %{
-        "id" => id,
-        "user_name" => user_name,
-        "user_email" => user_email,
-        "password" => password
-      }) do
-    case Accounts.update_user(%User{id: id}, %{
-           user_name: user_name,
-           user_email: user_email,
-           password: password
-         }) do
+  def update(
+        conn,
+        %{
+          "id" => id,
+          "user_name" => _user_name,
+          "user_email" => _user_email,
+          "password" => _password
+        } = params
+      ) do
+    case Accounts.update_user(%User{id: id}, params) do
       {:ok, {:ok, %User{} = user}} ->
         render(conn, "show.json", %{user: user})
 
