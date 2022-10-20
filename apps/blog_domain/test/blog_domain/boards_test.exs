@@ -239,23 +239,27 @@ defmodule BlogDomain.BoardsTest do
 
     test "update_post_comment" do
       owner = user_fixture()
-      post = post_fixtrue(owner)
+      %Post{id: post_id} = post_fixtrue(owner)
 
       assert {:ok, %Comment{id: id, description: desc}} =
-               Boards.write_comment(owner, post.id, @valid_params)
+               Boards.write_comment(owner, post_id, @valid_params)
 
       tasks = [
         Task.async(fn ->
-          Boards.update_post_comment(owner, id, %{description: "new desc first"})
+          Boards.update_post_comment(owner, post_id, id, %{description: "new desc first"})
         end),
         Task.async(fn ->
-          Boards.update_post_comment(owner, id, %{description: "new desc second"})
+          Boards.update_post_comment(owner, post_id, id, %{description: "new desc second"})
         end),
         Task.async(fn ->
-          Boards.update_post_comment(owner, id, %{description: "new desc third"})
+          Boards.update_post_comment(owner, post_id, id, %{description: "new desc third"})
         end),
-        Task.async(fn -> Boards.update_post_comment(owner, id, %{description: "new desc 4th"}) end),
-        Task.async(fn -> Boards.update_post_comment(owner, id, %{description: "new desc 5th"}) end)
+        Task.async(fn ->
+          Boards.update_post_comment(owner, post_id, id, %{description: "new desc 4th"})
+        end),
+        Task.async(fn ->
+          Boards.update_post_comment(owner, post_id, id, %{description: "new desc 5th"})
+        end)
       ]
 
       Task.await_many(tasks)
