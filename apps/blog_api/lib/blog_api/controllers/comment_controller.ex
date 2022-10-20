@@ -32,10 +32,15 @@ defmodule BlogApi.CommentController do
     end
   end
 
-  def update(conn, %{"user" => %{"id" => id}, "id" => comment_id, "comment" => comment}) do
+  def update(conn, %{
+        "user" => %{"id" => id},
+        "post_id" => post_id,
+        "id" => comment_id,
+        "comment" => comment
+      }) do
     user = Accounts.get_user(id)
 
-    case Boards.update_post_comment(user, comment_id, comment) do
+    case Boards.update_post_comment(user, post_id, comment_id, comment) do
       {:ok, {:ok, %Comment{} = comment}} ->
         render(conn, "show.json", %{comment: comment})
 
@@ -53,8 +58,8 @@ defmodule BlogApi.CommentController do
     end
   end
 
-  def delete(conn, %{"id" => id}) do
-    comment = Boards.get_comment(id)
+  def delete(conn, %{"post_id" => post_id, "id" => id}) do
+    comment = Boards.get_post_comment(post_id, id)
 
     case Boards.delete_comment(comment) do
       {:ok, %Comment{}} -> send_resp(conn, :no_content, "")
