@@ -6,6 +6,7 @@ defmodule BlogApi.ConnCase do
       import Plug.Conn
       import Phoenix.ConnTest
       import BlogApi.ConnCase
+      import BlogApi.FixtureHelper
 
       alias BlogApi.Router.Helpers, as: Routes
 
