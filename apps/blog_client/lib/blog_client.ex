@@ -112,7 +112,7 @@ defmodule BlogClient do
       |> Map.put(:user, %{id: 1})
       |> Jason.encode!()
 
-    HTTPoison.update("#{comments_url(post_id)}/#{comment_id}", req_body, [
+    HTTPoison.put("#{comments_url(post_id)}/#{comment_id}", req_body, [
       {"Content-Type", "application/json"}
     ])
     |> render_response()
