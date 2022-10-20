@@ -1,8 +1,16 @@
 defmodule BlogClient do
   use GenServer
 
+  @users_url "http://localhost:4000/api/users"
+
+  def get_all_users() do
+    case HTTPoison.get("#{@users_url}") do
+      {:ok, %HTTPosion.Response{status_code: 200, body: body}} -> IO.puts(body)
+    end
+  end
+
   def get_user(user_id) do
-    case HTTPoison.get("http://localhost:4000/api/users/#{user_id}") do
+    case HTTPoison.get("#{@users_url}/#{user_id}") do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} -> IO.puts(body)
       {:ok, %HTTPoison.Response{status_code: 400}} -> IO.puts("Not found")
       {:error, %HTTPoison.Error{reason: reason}} -> IO.inspect(reason)
@@ -13,7 +21,7 @@ defmodule BlogClient do
     req_body = Jason.encode!(%{user_name: user_name, user_email: user_email, password: password})
 
     case HTTPoison.post(
-           "http://localhost:4000/api/users/",
+           "#{@users_url}",
            req_body,
            [{"Content-Type", "application/json"}]
          ) do
