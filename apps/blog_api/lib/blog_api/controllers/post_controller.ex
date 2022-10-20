@@ -16,7 +16,10 @@ defmodule BlogApi.PostController do
     render(conn, "show.json", %{post: post})
   end
 
-  def create(conn, %{"user" => %{"id" => id}, "post" => post_params}) do
+  def create(conn, %{
+        "user" => %{"id" => id},
+        "post" => %{"title" => _title, "description" => _description} = post_params
+      }) do
     user = Accounts.get_user(id)
 
     case Boards.create_post(user, post_params) do
@@ -31,7 +34,10 @@ defmodule BlogApi.PostController do
     end
   end
 
-  def update(conn, %{"id" => id, "post" => post_params}) do
+  def update(conn, %{
+        "id" => id,
+        "post" => %{"title" => _title, "description" => _description} = post_params
+      }) do
     case Boards.update_post(id, post_params) do
       {:ok, {:ok, %Post{} = post}} ->
         render(conn, "show.json", %{post: post})

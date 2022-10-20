@@ -15,7 +15,11 @@ defmodule BlogApi.UserController do
     render(conn, "show.json", %{user: user})
   end
 
-  def register(conn, params) do
+  def register(
+        conn,
+        %{"user_name" => _user_name, "user_email" => _user_email, "password" => _password} =
+          params
+      ) do
     case Accounts.create_user(params) do
       {:ok, %User{} = user} ->
         conn
