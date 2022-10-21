@@ -24,7 +24,9 @@ defmodule BlogClient.MixProject do
 
   defp deps() do
     [
-      {:httpoison, "~> 1.8"}
+      {:httpoison, "~> 1.8"},
+      {:castore, "~> 0.1.0"},
+      {:mint, "~> 1.0"}
     ]
   end
 end
