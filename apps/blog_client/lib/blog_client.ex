@@ -1,119 +1,115 @@
 defmodule BlogClient do
-  @api_url "http://localhost:4000/api"
-  @users_url "http://localhost:4000/api/users"
-  @posts_url "http://localhost:4000/api/posts"
+  @header Application.compile_env(:blog_client, [BlogClient, :post_header])
 
-  def get_all_users() do
-    "#{@users_url}"
-    |> HTTPoison.get()
-    |> render_response()
+  @client BlogClient.HttpoisonClient
+
+  def get_all_users(client \\ []) do
+    "/users"
+    |> get(client)
   end
 
-  def get_user(user_id) do
-    "#{@users_url}/#{user_id}"
-    |> HTTPoison.get()
-    |> render_response()
+  def get_user(user_id, client \\ []) do
+    "/users/#{user_id}"
+    |> get(client)
   end
 
-  def register_user(
-        %{user_name: _user_name, user_email: _user_email, password: _password} = params
-      ) do
-    req_body = Jason.encode!(params)
+  def register_user(user_name, user_email, password, client \\ []) do
+    req_body = BlogClient.Api.register_user(user_name, user_email, password)
 
-    "#{@api_url}/register"
-    |> HTTPoison.post(req_body, [{"Content-Type", "application/json"}])
-    |> render_response()
+    "/register"
+    |> post(client, req_body)
   end
 
-  def update_user(id, params \\ %{}) do
-    req_body = Jason.encode!(params)
-
-    "#{@users_url}/#{id}"
-    |> HTTPoison.put(req_body, [{"Content-Type", "application/json"}])
-    |> render_response()
+  def update_user(id, params, client \\ []) do
+    req_body = BlogClient.Api.update_user(params)
+    update("users/#{id}", client, req_body)
   end
 
-  def get_all_posts() do
-    "#{@posts_url}"
-    |> HTTPoison.get()
-    |> render_response()
+  def get_all_posts(client \\ []) do
+    "/posts"
+    |> get(client)
   end
 
-  def get_post(post_id) do
-    "#{@posts_url}/#{post_id}"
-    |> HTTPoison.get()
-    |> render_response()
+  def get_post(post_id, client \\ []) do
+    "/posts/#{post_id}"
+    |> get(client)
   end
 
-  def create_post(%{title: _title, description: _description} = params) do
-    # 현재 유저 토큰 없으므로 임시 아이디
-    req_body =
-      %{post: params}
-      |> Map.put(:user, %{id: 1})
-      |> Jason.encode!()
+  def create_post(title, description, client \\ []) do
+    req_body = BlogClient.Api.create_post(title, description)
 
-    "#{@posts_url}"
-    |> HTTPoison.post(req_body, [{"Content-Type", "application/json"}])
-    |> render_response()
+    "/posts"
+    |> post(client, req_body)
   end
 
-  def update_post(post_id, params \\ %{}) do
-    req_body =
-      %{post: params}
-      |> Jason.encode!()
+  def update_post(post_id, params, client \\ []) do
+    req_body = BlogClient.Api.update_post(params)
 
-    "#{@posts_url}/#{post_id}"
-    |> HTTPoison.put(req_body, [{"Content-Type", "application/json"}])
-    |> render_response()
+    "/posts/#{post_id}"
+    |> update(client, req_body)
   end
 
-  def delete_post(post_id) do
-    "#{@posts_url}/#{post_id}"
-    |> HTTPoison.delete()
-    |> render_response()
+  def delete_post(post_id, client \\ []) do
+    "/posts/#{post_id}"
+    |> delete(client)
   end
 
-  def get_all_comments_in_post(post_id) do
-    comments_url(post_id)
-    |> HTTPoison.get()
-    |> render_response()
+  def get_all_comments_in_post(post_id, client \\ []) do
+    "/comments/#{post_id}"
+    |> get(client)
   end
 
-  def show_comment_in_post(post_id, comment_id) do
-    "#{comments_url(post_id)}/#{comment_id}"
-    |> HTTPoison.get()
-    |> render_response()
+  def show_comment_in_post(post_id, comment_id, client \\ []) do
+    "/comments/#{post_id}/#{comment_id}"
+    |> get(client)
   end
 
-  def create_comment_in_post(post_id, %{description: _desc} = params) do
-    req_body =
-      %{comment: params}
-      |> Map.put(:user, %{id: 1})
-      |> Jason.encode!()
+  def create_comment_in_post(post_id, description, client \\ []) do
+    req_body = BlogClient.Api.create_comment_in_post(description)
 
-    "#{comments_url(post_id)}"
-    |> HTTPoison.post(req_body, [{"Content-Type", "application/json"}])
-    |> render_response()
+    "/comments/#{post_id}"
+    |> post(client, req_body)
   end
 
-  def update_comment_in_post(post_id, comment_id, %{description: _desc} = params) do
-    req_body =
-      %{comment: params}
-      |> Map.put(:user, %{id: 1})
-      |> Jason.encode!()
+  def update_comment_in_post(post_id, comment_id, description, client \\ []) do
+    req_body = BlogClient.Api.update_comment_in_post(description)
 
-    "#{comments_url(post_id)}/#{comment_id}"
-    |> HTTPoison.put(req_body, [{"Content-Type", "application/json"}])
-    |> render_response()
+    "/comments/#{post_id}}/#{comment_id}"
+    |> update(client, req_body)
   end
 
-  def delete_comment_in_post(post_id, comment_id) do
-    "#{comments_url(post_id)}/#{comment_id}"
-    |> HTTPoison.delete()
-    |> render_response()
+  def delete_comment_in_post(post_id, comment_id, client \\ []) do
+    "/comments/#{post_id}/#{comment_id}"
+    |> delete(client)
   end
 
-  defp comments_url(post_id), do: "#{@posts_url}/#{post_id}/comments"
+  defp post(url, client, req_body) do
+    client[:client] ||
+      @client
+      |> apply(:post, [url, req_body, @header])
+      |> render_response()
+  end
+
+  defp get(url, client) do
+    client[:client] ||
+      @client
+      |> apply(:get, [url])
+      |> render_response()
+  end
+
+  defp update(url, client, req_body) do
+    client[:client] ||
+      @client
+      |> apply(:update, [url, req_body, @header])
+      |> render_response()
+  end
+
+  defp delete(url, client) do
+    client[:client] ||
+      @client
+      |> apply(:delete, [url])
+      |> render_response()
+  end
 
   defp render_response(response) do
     case response do

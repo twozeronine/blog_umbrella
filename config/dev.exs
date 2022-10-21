@@ -23,3 +23,7 @@ config :logger, :console, format: "[$level] $message\n"
 config :phoenix, :plug_init_mode, :runtime
 
 config :phoenix, :stacktrace_depth, 20
+
+config :blog_client, BlogClient,
+  api_url: "http://localhost:4000/api",
+  post_header: {"Content-Type", "application/json"}
