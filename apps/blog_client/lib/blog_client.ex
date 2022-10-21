@@ -1,6 +1,4 @@
 defmodule BlogClient do
-  @header Application.compile_env(:blog_client, [BlogClient, :post_header])
-
   @client BlogClient.HttpoisonClient
 
   def get_all_users(client \\ []) do
@@ -84,31 +82,35 @@ defmodule BlogClient do
   end
 
   defp post(url, client, req_body) do
-    client[:client] ||
-      @client
-      |> apply(:post, [url, req_body, @header])
-      |> render_response()
+    client = client[:client] || @client
+
+    client
+    |> apply(:post, [url, req_body])
+    |> render_response()
   end
 
   defp get(url, client) do
-    client[:client] ||
-      @client
-      |> apply(:get, [url])
-      |> render_response()
+    client = client[:client] || @client
+
+    client
+    |> apply(:get, [url])
+    |> render_response()
   end
 
   defp update(url, client, req_body) do
-    client[:client] ||
-      @client
-      |> apply(:update, [url, req_body, @header])
-      |> render_response()
+    client = client[:client] || @client
+
+    client
+    |> apply(:update, [url, req_body])
+    |> render_response()
   end
 
   defp delete(url, client) do
-    client[:client] ||
-      @client
-      |> apply(:delete, [url])
-      |> render_response()
+    client = client[:client] || @client
+
+    client
+    |> apply(:delete, [url])
+    |> render_response()
   end
 
   defp render_response(response) do

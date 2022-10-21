@@ -2,6 +2,7 @@ defmodule BlogClient.HttpoisonClient do
   @behaviour BlogClient.Client
 
   @api_url Application.compile_env(:blog_client, [BlogClient, :api_url])
+  @header {"Content-Type", "application/json"}
 
   @impl true
   def get(url) do
@@ -11,16 +12,16 @@ defmodule BlogClient.HttpoisonClient do
   end
 
   @impl true
-  def post(url, req_body, header) do
+  def post(url, req_body) do
     "#{@api_url}/#{url}"
-    |> HTTPoison.post(req_body, [header])
+    |> HTTPoison.post(req_body, [@header])
     |> handle_response()
   end
 
   @impl true
-  def update(url, req_body, header) do
+  def update(url, req_body) do
     "#{@api_url}/#{url}"
-    |> HTTPoison.put(req_body, [header])
+    |> HTTPoison.put(req_body, [@header])
     |> handle_response()
   end
 
