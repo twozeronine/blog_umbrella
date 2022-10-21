@@ -112,12 +112,6 @@ defmodule BlogClient do
   end
 
   defp render_response(response) do
-    case response do
-      {:ok, %HTTPoison.Response{status_code: 200, body: body}} -> IO.inspect(body)
-      {:ok, %HTTPoison.Response{status_code: 201, body: body}} -> IO.inspect(body)
-      {:ok, %HTTPoison.Response{status_code: 204, body: body}} -> IO.inspect(body)
-      {:ok, %HTTPoison.Response{status_code: 404}} -> IO.inspect({:error, :not_found})
-      {:error, %HTTPoison.Error{reason: reason}} -> IO.inspect(reason)
-    end
+    IO.inspect(response)
   end
 end
