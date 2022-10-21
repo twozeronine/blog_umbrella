@@ -3,9 +3,7 @@ defmodule BlogClient.Application do
 
   @impl true
   def start(_type, _args) do
-    children = [
-      BlogClient
-    ]
+    children = []
 
     opts = [
       {:name, __MODULE__},

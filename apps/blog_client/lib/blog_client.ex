@@ -1,17 +1,17 @@
 defmodule BlogClient do
-  use GenServer
-
   @api_url "http://localhost:4000/api"
   @users_url "http://localhost:4000/api/users"
   @posts_url "http://localhost:4000/api/posts"
 
   def get_all_users() do
-    HTTPoison.get("#{@users_url}")
+    "#{@users_url}"
+    |> HTTPoison.get()
     |> render_response()
   end
 
   def get_user(user_id) do
-    HTTPoison.get("#{@users_url}/#{user_id}")
+    "#{@users_url}/#{user_id}"
+    |> HTTPoison.get()
     |> render_response()
   end
 
@@ -20,40 +20,28 @@ defmodule BlogClient do
       ) do
     req_body = Jason.encode!(params)
 
-    case HTTPoison.post(
-           "#{@api_url}/register",
-           req_body,
-           [{"Content-Type", "application/json"}]
-         ) do
-      {:ok, %HTTPoison.Response{body: body, headers: _headers}} ->
-        IO.inspect(body)
-
-      # 받은 토큰을 상태 서버에 저장하기 !
-      # GenServer.cast(self(), {:token, token})
-
-      {:error, %HTTPoison.Error{reason: reason}} ->
-        IO.inspect(reason)
-    end
+    "#{@api_url}/register"
+    |> HTTPoison.post(req_body, [{"Content-Type", "application/json"}])
+    |> render_response()
   end
 
   def update_user(id, params \\ %{}) do
     req_body = Jason.encode!(params)
 
-    HTTPoison.put(
-      "#{@users_url}/#{id}",
-      req_body,
-      [{"Content-Type", "application/json"}]
-    )
+    "#{@users_url}/#{id}"
+    |> HTTPoison.put(req_body, [{"Content-Type", "application/json"}])
     |> render_response()
   end
 
   def get_all_posts() do
-    HTTPoison.get("#{@posts_url}")
+    "#{@posts_url}"
+    |> HTTPoison.get()
     |> render_response()
   end
 
   def get_post(post_id) do
-    HTTPoison.get("#{@posts_url}/#{post_id}")
+    "#{@posts_url}/#{post_id}"
+    |> HTTPoison.get()
     |> render_response()
   end
 
@@ -64,7 +52,8 @@ defmodule BlogClient do
       |> Map.put(:user, %{id: 1})
       |> Jason.encode!()
 
-    HTTPoison.post("#{@posts_url}", req_body, [{"Content-Type", "application/json"}])
+    "#{@posts_url}"
+    |> HTTPoison.post(req_body, [{"Content-Type", "application/json"}])
     |> render_response()
   end
 
@@ -73,24 +62,26 @@ defmodule BlogClient do
       %{post: params}
       |> Jason.encode!()
 
-    HTTPoison.put("#{@posts_url}/#{post_id}", req_body, [
-      {"Content-Type", "application/json"}
-    ])
+    "#{@posts_url}/#{post_id}"
+    |> HTTPoison.put(req_body, [{"Content-Type", "application/json"}])
     |> render_response()
   end
 
   def delete_post(post_id) do
-    HTTPoison.delete("#{@posts_url}/#{post_id}")
+    "#{@posts_url}/#{post_id}"
+    |> HTTPoison.delete()
     |> render_response()
   end
 
   def get_all_comments_in_post(post_id) do
-    HTTPoison.get(comments_url(post_id))
+    comments_url(post_id)
+    |> HTTPoison.get()
     |> render_response()
   end
 
   def show_comment_in_post(post_id, comment_id) do
-    HTTPoison.get("#{comments_url(post_id)}/#{comment_id}")
+    "#{comments_url(post_id)}/#{comment_id}"
+    |> HTTPoison.get()
     |> render_response()
   end
 
@@ -100,9 +91,8 @@ defmodule BlogClient do
       |> Map.put(:user, %{id: 1})
       |> Jason.encode!()
 
-    HTTPoison.post("#{comments_url(post_id)}", req_body, [
-      {"Content-Type", "application/json"}
-    ])
+    "#{comments_url(post_id)}"
+    |> HTTPoison.post(req_body, [{"Content-Type", "application/json"}])
     |> render_response()
   end
 
@@ -112,31 +102,15 @@ defmodule BlogClient do
       |> Map.put(:user, %{id: 1})
       |> Jason.encode!()
 
-    HTTPoison.put("#{comments_url(post_id)}/#{comment_id}", req_body, [
-      {"Content-Type", "application/json"}
-    ])
+    "#{comments_url(post_id)}/#{comment_id}"
+    |> HTTPoison.put(req_body, [{"Content-Type", "application/json"}])
     |> render_response()
   end
 
   def delete_comment_in_post(post_id, comment_id) do
-    HTTPoison.delete("#{comments_url(post_id)}/#{comment_id}")
+    "#{comments_url(post_id)}/#{comment_id}"
+    |> HTTPoison.delete()
     |> render_response()
-  end
-
-  def start_link(_init_arg) do
-    GenServer.start_link(__MODULE__, %{}, name: __MODULE__)
-  end
-
-  @impl true
-  def init(init_arg) do
-    HTTPoison.start()
-
-    {:ok, init_arg}
-  end
-
-  @impl true
-  def handle_cast({:token, token}, state) do
-    {:noreply, Map.put(state, :token, token)}
   end
 
   defp comments_url(post_id), do: "#{@posts_url}/#{post_id}/comments"
