@@ -10,15 +10,15 @@ defmodule BlogClient.MintClient do
   end
 
   @impl true
-  def post(url, req_body) do
+  def post(url, req_body, headers) do
     {:ok, conn} = connect()
-    http_request(conn, "POST", url, [{"content-type", "application/json"}], req_body)
+    http_request(conn, "POST", url, headers, req_body)
   end
 
   @impl true
-  def update(url, req_body) do
+  def update(url, req_body, headers) do
     {:ok, conn} = connect()
-    http_request(conn, "PUT", url, [{"content-type", "application/json"}], req_body)
+    http_request(conn, "PUT", url, headers, req_body)
   end
 
   @impl true
@@ -28,7 +28,7 @@ defmodule BlogClient.MintClient do
   end
 
   defp connect() do
-    {:ok, conn} = Mint.HTTP.connect(:http, @host, @port, [])
+    {:ok, _conn} = Mint.HTTP.connect(:http, @host, @port, [])
   end
 
   defp http_request(conn, method, url, header, body) do

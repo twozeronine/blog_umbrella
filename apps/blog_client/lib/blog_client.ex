@@ -1,5 +1,6 @@
 defmodule BlogClient do
-  @client BlogClient.HttpoisonClient
+  @client Application.compile_env!(:blog_client, [BlogClient, :default_client])
+  @headers Application.compile_env!(:blog_client, [BlogClient, :headers])
 
   def get_all_users(client \\ []) do
     "/users"
@@ -85,8 +86,7 @@ defmodule BlogClient do
     client = client[:client] || @client
 
     client
-    |> apply(:post, [url, req_body])
-    |> render_response()
+    |> apply(:post, [url, req_body, @headers])
   end
 
   defp get(url, client) do
@@ -94,15 +94,13 @@ defmodule BlogClient do
 
     client
     |> apply(:get, [url])
-    |> render_response()
   end
 
   defp update(url, client, req_body) do
     client = client[:client] || @client
 
     client
-    |> apply(:update, [url, req_body])
-    |> render_response()
+    |> apply(:update, [url, req_body, @headers])
   end
 
   defp delete(url, client) do
@@ -110,10 +108,5 @@ defmodule BlogClient do
 
     client
     |> apply(:delete, [url])
-    |> render_response()
-  end
-
-  defp render_response(response) do
-    IO.inspect(response)
   end
 end

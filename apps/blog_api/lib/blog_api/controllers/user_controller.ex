@@ -11,7 +11,6 @@ defmodule BlogApi.UserController do
   end
 
   def show(conn, %{"id" => id}) do
-    Accounts.create_user()
     user = Accounts.get_user(id)
     render(conn, "show.json", %{user: user})
   end
