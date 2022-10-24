@@ -20,11 +20,7 @@ defmodule BlogApi.UserControllerTest do
       end)
       |> hd()
 
-    assert {:ok, token, _claims} =
-             BlogApi.Token.generate_and_sign(
-               %{"user_id" => user_id},
-               BlogApi.Token.token_create()
-             )
+    assert token = BlogApi.Token.generate_and_sign_token(user_id)
 
     conn =
       conn
