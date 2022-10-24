@@ -48,7 +48,9 @@ defmodule BlogApi.AuthController do
   end
 
   def logout(conn, _params) do
-    conn = conn |> BlogApi.Auth.logout()
+    conn =
+      conn
+      |> BlogApi.Auth.logout()
 
     conn
     |> render("show.json", %{user: conn.assigns[:user], token: nil})

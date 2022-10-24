@@ -35,20 +35,15 @@ defmodule BlogApi.Auth do
   end
 
   def logout(conn) do
-    case get_session(conn, :user_id) do
-      nil ->
-        conn
-        |> put_status(400)
-        |> halt()
+    user =
+      conn
+      |> get_session(:user_id)
+      |> Accounts.get_user()
 
-      user_id ->
-        user = Accounts.get_user(user_id)
-
-        conn
-        |> clear_session()
-        |> assign(:user, user)
-        |> put_status(200)
-    end
+    conn
+    |> clear_session()
+    |> assign(:user, user)
+    |> put_status(200)
   end
 
   defp check_user_token_validate(conn) do
