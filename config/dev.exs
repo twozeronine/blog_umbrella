@@ -28,4 +28,6 @@ config :blog_client, BlogClient,
   host: "localhost",
   port: 4000,
   scheme: :http,
-  api_url: "http://localhost:4000/api"
+  api_url: "http://localhost:4000/api",
+  default_client: BlogClient.HttpoisonClient,
+  headers: [{"Content-Type", "application/json"}]
