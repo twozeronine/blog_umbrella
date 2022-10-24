@@ -49,7 +49,7 @@ defmodule BlogApi.Auth do
   defp check_user_token_validate(conn) do
     validate_token =
       conn
-      |> joken_from_header()
+      |> get_joken_from_header()
       |> BlogApi.Token.verify_token()
       |> BlogApi.Token.validate_token()
 
@@ -71,7 +71,7 @@ defmodule BlogApi.Auth do
     end
   end
 
-  defp joken_from_header(conn) do
+  defp get_joken_from_header(conn) do
     conn
     |> get_req_header("authorization")
     |> List.first()
