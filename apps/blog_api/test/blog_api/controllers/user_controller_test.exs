@@ -10,15 +10,26 @@ defmodule BlogApi.UserControllerTest do
   }
 
   test "GET /users", %{conn: conn} do
-    Enum.map(1..5, fn num ->
-      user_fixture(%{
-        user_name: @valid_params.user_name <> "#{num}",
-        user_email: @valid_params.user_email <> "#{num}",
-        password: @valid_params.password <> "#{num}"
-      })
-    end)
+    %User{id: user_id} =
+      Enum.map(1..5, fn num ->
+        user_fixture(%{
+          user_name: @valid_params.user_name <> "#{num}",
+          user_email: @valid_params.user_email <> "#{num}",
+          password: @valid_params.password <> "#{num}"
+        })
+      end)
+      |> hd()
 
-    conn = get(conn, Routes.user_path(conn, :index))
+    assert {:ok, token, _claims} =
+             BlogApi.Token.generate_and_sign(
+               %{"user_id" => user_id},
+               BlogApi.Token.token_create()
+             )
+
+    conn =
+      conn
+      |> put_req_header("authorization", token)
+      |> get(Routes.user_path(conn, :index))
 
     assert %{
              "data" => [
@@ -38,13 +49,6 @@ defmodule BlogApi.UserControllerTest do
 
     assert %{"data" => %{"user_email" => "User Email", "user_name" => "User"}} =
              json_response(conn, 200)
-  end
-
-  test "POST /register", %{conn: conn} do
-    conn = post(conn, Routes.user_path(conn, :register), @valid_params)
-
-    assert %{"data" => %{"user_email" => "User Email", "user_name" => "User"}} =
-             json_response(conn, 201)
   end
 
   test "UPDATE /users/:id", %{conn: conn} do

@@ -1,28 +1,28 @@
 defmodule BlogApi.Auth do
   import Plug.Conn
   alias BlogDomain.Accounts.User
+  alias BlogDomain.Accounts
 
   def init(opts), do: opts
 
   def call(conn, _) do
     {:ok, %{"user_id" => user_id}} =
-      token =
       get_req_header(conn, "authorization")
       |> hd()
       |> String.split(" ")
-      |> tl()
+      |> List.last()
+      |> BlogApi.Token.verify_and_validate(BlogApi.Token.token_create())
 
-    case BlogApi.Token.verify_and_validate(token, BlogApi.Token.token_create()) do
-      {:ok, _claims} ->
-        nil
+    case Accounts.get_user(user_id) do
+      nil -> conn |> put_status(401) |> halt()
+      %User{} = _user -> conn
     end
   end
 
-  def login(user) do
-    {:ok, token, _claims} =
-      %{user_id: user.id}
-      |> BlogApi.Token.generate_and_sign(BlogApi.Token.token_create())
-
-    token
+  def login(%User{id: user_id}) do
+    case BlogApi.Token.generate_and_sign(%{"user_id" => user_id}, BlogApi.Token.token_create()) do
+      {:ok, token, _claims} -> token
+      {:error, reason} -> {:error, reason}
+    end
   end
 end

@@ -15,25 +15,6 @@ defmodule BlogApi.UserController do
     render(conn, "show.json", %{user: user})
   end
 
-  def register(
-        conn,
-        %{"user_name" => _user_name, "user_email" => _user_email, "password" => _password} =
-          params
-      ) do
-    case Accounts.create_user(params) do
-      {:ok, %User{} = user} ->
-        conn
-
-        # |> 로그인 로직
-        |> put_status(:created)
-        |> put_resp_header("location", Routes.user_path(conn, :show, user))
-        |> render("show.json", %{user: user})
-
-      {:error, %Ecto.Changeset{} = changeset} ->
-        conn |> render("errors.json", %{errors: Utils.format_changeset_errors(changeset)})
-    end
-  end
-
   def update(
         conn,
         %{

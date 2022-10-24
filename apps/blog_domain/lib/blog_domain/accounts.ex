@@ -10,6 +10,28 @@ defmodule BlogDomain.Accounts do
 
   def get_user(id), do: Repo.get(User, id)
 
+  def get_user_by_user_email(user_email) do
+    User
+    |> User.user_email_query(user_email)
+    |> Repo.one()
+  end
+
+  def authenticate_by_username_and_pass(user_email, password) do
+    user = get_user_by_user_email(user_email)
+
+    cond do
+      user && Argon2.verify_pass(password, user.password_hash) ->
+        {:ok, user}
+
+      user ->
+        {:error, :unauthorized}
+
+      true ->
+        Argon2.no_user_verify()
+        {:error, :not_found}
+    end
+  end
+
   def update_user(%User{id: id}, params \\ %{}) do
     fn ->
       case get_user_lock(id) do
