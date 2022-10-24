@@ -6,16 +6,12 @@ defmodule BlogApi.Auth do
   def init(opts), do: opts
 
   def call(conn, _) do
-    case conn.assigns[:user_token] do
-      nil ->
-        conn
-        |> check_user_token_validate()
-        |> check_user_validate()
+    valid_token =
+      conn
+      |> get_valid_user_token_()
 
-      token ->
-        conn
-        |> put_user_token(token)
-    end
+    conn
+    |> check_user_validate(valid_token)
   end
 
   def login(conn, %User{id: user_id}) do
@@ -25,7 +21,7 @@ defmodule BlogApi.Auth do
 
         conn
         |> put_session(:user_id, user_id)
-        |> put_user_token(token)
+        |> assign(:user_token, token)
 
       _user_id ->
         conn
@@ -46,20 +42,17 @@ defmodule BlogApi.Auth do
     |> put_status(200)
   end
 
-  defp check_user_token_validate(conn) do
-    validate_token =
+  defp get_valid_user_token_(conn) do
+    valid_token =
       conn
       |> get_joken_from_header()
       |> BlogApi.Token.verify_token()
       |> BlogApi.Token.validate_token()
 
-    conn
-    |> put_user_token(validate_token)
+    valid_token
   end
 
-  defp check_user_validate(conn) do
-    %{"user_id" => user_id} = conn.assigns[:user_token]
-
+  defp check_user_validate(conn, %{"user_id" => user_id}) do
     case Accounts.get_user(user_id) do
       nil ->
         conn
@@ -77,10 +70,5 @@ defmodule BlogApi.Auth do
     |> List.first()
     |> String.split(" ")
     |> List.last()
-  end
-
-  defp put_user_token(conn, token) do
-    conn
-    |> assign(:user_token, token)
   end
 end
