@@ -1,6 +1,6 @@
 defmodule BlogClient do
-  @client Application.compile_env!(:blog_client, [BlogClient, :default_client])
-  @headers Application.compile_env!(:blog_client, [BlogClient, :headers])
+  @client Application.compile_env(:blog_client, [BlogClient, :default_client])
+  @headers Application.compile_env(:blog_client, [BlogClient, :headers])
 
   def get_all_users(client \\ []) do
     "/users"
