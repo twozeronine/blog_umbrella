@@ -6,18 +6,86 @@ defmodule BlogApi.Auth do
   def init(opts), do: opts
 
   def call(conn, _) do
-    user_id =
-      conn
-      |> get_req_header("authorization")
-      |> BlogApi.Token.verify_and_validate_token()
+    case conn.assigns[:user_token] do
+      nil ->
+        conn
+        |> check_user_token_validate()
+        |> check_user_validate()
 
-    case Accounts.get_user(user_id) do
-      nil -> conn |> put_status(401) |> halt()
-      %User{} = _user -> conn
+      token ->
+        conn
+        |> put_user_token(token)
     end
   end
 
-  def login(%User{id: user_id}) do
-    BlogApi.Token.generate_and_sign_token(user_id)
+  def login(conn, %User{id: user_id}) do
+    case get_session(conn, :user_id) do
+      nil ->
+        token = BlogApi.Token.generate_token(user_id)
+
+        conn
+        |> put_session(:user_id, user_id)
+        |> put_user_token(token)
+
+      _user_id ->
+        conn
+        |> put_status(400)
+        |> halt()
+    end
+  end
+
+  def logout(conn) do
+    case get_session(conn, :user_id) do
+      nil ->
+        conn
+        |> put_status(400)
+        |> halt()
+
+      user_id ->
+        user = Accounts.get_user(user_id)
+
+        conn
+        |> clear_session()
+        |> assign(:user, user)
+        |> put_status(200)
+    end
+  end
+
+  defp check_user_token_validate(conn) do
+    validate_token =
+      conn
+      |> joken_from_header()
+      |> BlogApi.Token.verify_token()
+      |> BlogApi.Token.validate_token()
+
+    conn
+    |> put_user_token(validate_token)
+  end
+
+  defp check_user_validate(conn) do
+    %{"user_id" => user_id} = conn.assigns[:user_token]
+
+    case Accounts.get_user(user_id) do
+      nil ->
+        conn
+        |> put_status(401)
+        |> halt()
+
+      %User{} ->
+        conn
+    end
+  end
+
+  defp joken_from_header(conn) do
+    conn
+    |> get_req_header("authorization")
+    |> List.first()
+    |> String.split(" ")
+    |> List.last()
+  end
+
+  defp put_user_token(conn, token) do
+    conn
+    |> assign(:user_token, token)
   end
 end

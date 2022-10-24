@@ -3,6 +3,7 @@ defmodule BlogApi.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug :fetch_session
   end
 
   pipeline :auth do
@@ -26,6 +27,7 @@ defmodule BlogApi.Router do
 
     post "/register", AuthController, :register
     post "/login", AuthController, :login
+    post "/logout", AuthController, :logout
   end
 
   if Mix.env() in [:dev, :test] do

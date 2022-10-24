@@ -20,7 +20,7 @@ defmodule BlogApi.UserControllerTest do
       end)
       |> hd()
 
-    assert token = BlogApi.Token.generate_and_sign_token(user_id)
+    assert token = BlogApi.Token.generate_token(user_id)
 
     conn =
       conn
@@ -49,7 +49,7 @@ defmodule BlogApi.UserControllerTest do
       end)
       |> hd()
 
-    assert invalid_token = BlogApi.Token.generate_and_sign_token(user_id - 0)
+    assert invalid_token = BlogApi.Token.generate_token(user_id - 0)
 
     conn =
       conn
