@@ -26,18 +26,18 @@ defmodule BlogApi.AuthController do
   def login(conn, %{"user_email" => user_email, "password" => password}) do
     case Accounts.authenticate_by_username_and_pass(user_email, password) do
       {:ok, user} ->
-        conn = BlogApi.Auth.login(conn, user)
-
-        case conn do
-          %Plug.Conn{halted: true} ->
+        conn
+        |> BlogApi.Auth.login(user)
+        |> then(fn
+          %Plug.Conn{halted: true} = conn ->
             conn
             |> render("errors.json", %{errors: "user already login"})
 
-          %Plug.Conn{halted: false} ->
+          %Plug.Conn{halted: false} = conn ->
             conn
             |> put_status(200)
             |> render("show.json", %{user: user, token: conn.assigns[:user_token]})
-        end
+        end)
 
       {:error, _reason} ->
         conn
@@ -48,9 +48,7 @@ defmodule BlogApi.AuthController do
   end
 
   def logout(conn, _params) do
-    conn =
-      conn
-      |> BlogApi.Auth.logout()
+    conn = BlogApi.Auth.logout(conn)
 
     conn
     |> render("show.json", %{user: conn.assigns[:user], token: nil})
