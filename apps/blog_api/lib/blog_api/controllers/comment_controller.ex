@@ -16,12 +16,10 @@ defmodule BlogApi.CommentController do
   end
 
   def create(conn, %{"user" => %{"id" => id}, "post_id" => post_id, "comment" => comment_param}) do
-    {post_id, _} = Integer.parse(post_id)
-
     {:ok, %Comment{} = comment} =
       id
       |> Accounts.get_user()
-      |> Boards.write_comment(post_id, comment_param)
+      |> Boards.write_comment(String.to_integer(post_id), comment_param)
 
     conn
     |> put_status(:created)
@@ -49,6 +47,7 @@ defmodule BlogApi.CommentController do
     |> Boards.delete_comment()
 
     conn
+    |> put_status(200)
     |> send_resp(:no_content, "")
   end
 end

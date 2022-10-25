@@ -15,10 +15,7 @@ defmodule BlogApi.PostController do
     render(conn, "show.json", %{post: post})
   end
 
-  def create(conn, %{
-        "user" => %{"id" => id},
-        "post" => %{"title" => _title, "description" => _description} = post_params
-      }) do
+  def create(conn, %{"user" => %{"id" => id}, "post" => post_params}) do
     {:ok, %Post{} = post} =
       id
       |> Accounts.get_user()
@@ -30,10 +27,7 @@ defmodule BlogApi.PostController do
     |> render("show.json", %{post: post})
   end
 
-  def update(conn, %{
-        "id" => id,
-        "post" => %{"title" => _title, "description" => _description} = post_params
-      }) do
+  def update(conn, %{"id" => id, "post" => post_params}) do
     {:ok, {:ok, %Post{} = post}} = Boards.update_post(id, post_params)
 
     conn
@@ -46,6 +40,7 @@ defmodule BlogApi.PostController do
     |> Boards.delete_post()
 
     conn
+    |> put_status(200)
     |> send_resp(:no_content, "")
   end
 end
