@@ -2,105 +2,105 @@ defmodule BlogClient do
   @client Application.compile_env(:blog_client, [BlogClient, :default_client])
   @headers Application.compile_env(:blog_client, [BlogClient, :headers])
 
-  def get_all_users(client \\ []) do
-    "/users"
-    |> get(client)
+  def get_all_users(opts \\ []) do
+    "/auth/users"
+    |> get(opts)
   end
 
-  def get_user(user_id, client \\ []) do
+  def get_user(user_id, opts \\ []) do
     "/users/#{user_id}"
-    |> get(client)
+    |> get(opts)
   end
 
-  def register_user(user_name, user_email, password, client \\ []) do
+  def register_user(user_name, user_email, password, opts \\ []) do
     req_body = BlogClient.Api.register_user(user_name, user_email, password)
 
     "/register"
-    |> post(client, req_body)
+    |> post(opts, req_body)
   end
 
-  def update_user(id, params, client \\ []) do
+  def update_user(id, params, opts \\ []) do
     req_body = BlogClient.Api.update_user(params)
-    update("users/#{id}", client, req_body)
+    update("/users/#{id}", opts, req_body)
   end
 
-  def get_all_posts(client \\ []) do
+  def get_all_posts(opts \\ []) do
     "/posts"
-    |> get(client)
+    |> get(opts)
   end
 
-  def get_post(post_id, client \\ []) do
+  def get_post(post_id, opts \\ []) do
     "/posts/#{post_id}"
-    |> get(client)
+    |> get(opts)
   end
 
-  def create_post(title, description, client \\ []) do
+  def create_post(title, description, opts \\ []) do
     req_body = BlogClient.Api.create_post(title, description)
 
-    "/posts"
-    |> post(client, req_body)
+    "/auth/posts"
+    |> post(opts, req_body)
   end
 
-  def update_post(post_id, params, client \\ []) do
+  def update_post(post_id, params, opts \\ []) do
     req_body = BlogClient.Api.update_post(params)
 
     "/posts/#{post_id}"
-    |> update(client, req_body)
+    |> update(opts, req_body)
   end
 
-  def delete_post(post_id, client \\ []) do
+  def delete_post(post_id, opts \\ []) do
     "/posts/#{post_id}"
-    |> delete(client)
+    |> delete(opts)
   end
 
-  def get_all_comments_in_post(post_id, client \\ []) do
-    "/comments/#{post_id}"
-    |> get(client)
+  def get_all_comments_in_post(post_id, opts \\ []) do
+    "/posts/#{post_id}/comments"
+    |> get(opts)
   end
 
-  def show_comment_in_post(post_id, comment_id, client \\ []) do
-    "/comments/#{post_id}/#{comment_id}"
-    |> get(client)
+  def show_comment_in_post(post_id, comment_id, opts \\ []) do
+    "/posts/#{post_id}/comments/#{comment_id}"
+    |> get(opts)
   end
 
-  def create_comment_in_post(post_id, description, client \\ []) do
+  def create_comment_in_post(post_id, description, opts \\ []) do
     req_body = BlogClient.Api.create_comment_in_post(description)
 
-    "/comments/#{post_id}"
-    |> post(client, req_body)
+    "/auth/posts/#{post_id}/comments"
+    |> post(opts, req_body)
   end
 
-  def update_comment_in_post(post_id, comment_id, description, client \\ []) do
+  def update_comment_in_post(post_id, comment_id, description, opts \\ []) do
     req_body = BlogClient.Api.update_comment_in_post(description)
 
-    "/comments/#{post_id}}/#{comment_id}"
-    |> update(client, req_body)
+    "/auth/posts/#{post_id}/comments/#{comment_id}"
+    |> update(opts, req_body)
   end
 
-  def delete_comment_in_post(post_id, comment_id, client \\ []) do
-    "/comments/#{post_id}/#{comment_id}"
-    |> delete(client)
+  def delete_comment_in_post(post_id, comment_id, opts \\ []) do
+    "/posts/#{post_id}/comments/#{comment_id}"
+    |> delete(opts)
   end
 
-  defp post(url, client, req_body) do
-    client = client[:client] || @client
+  defp post(url, opts, req_body) do
+    client = opts[:client] || @client
 
     client
-    |> apply(:post, [url, req_body, @headers])
+    |> apply(:post, [url, req_body, [{"authorization", "Bearer #{opts[:token]}"} | @headers]])
   end
 
-  defp get(url, client) do
-    client = client[:client] || @client
+  defp get(url, opts) do
+    client = opts[:client] || @client
 
     client
-    |> apply(:get, [url])
+    |> apply(:get, [url, [{"authorization", "Bearer #{opts[:token]}"}]])
   end
 
-  defp update(url, client, req_body) do
-    client = client[:client] || @client
+  defp update(url, opts, req_body) do
+    client = opts[:client] || @client
 
     client
-    |> apply(:update, [url, req_body, @headers])
+    |> apply(:update, [url, req_body, [{"authorization", "Bearer #{opts[:token]}"} | @headers]])
   end
 
   defp delete(url, client) do

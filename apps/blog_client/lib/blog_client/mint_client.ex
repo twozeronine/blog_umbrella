@@ -4,9 +4,9 @@ defmodule BlogClient.MintClient do
   @host Application.compile_env(:blog_client, [BlogClient, :host])
 
   @impl true
-  def get(url) do
+  def get(url, headers) do
     {:ok, conn} = connect()
-    http_request(conn, "GET", url, [], "")
+    http_request(conn, "GET", url, headers, "")
   end
 
   @impl true
@@ -32,7 +32,7 @@ defmodule BlogClient.MintClient do
   end
 
   defp http_request(conn, method, url, header, body) do
-    {:ok, conn, request_ref} = Mint.HTTP.request(conn, method, "/api/#{url}", header, body)
+    {:ok, conn, request_ref} = Mint.HTTP.request(conn, method, "/api#{url}", header, body)
 
     receive do
       message ->
