@@ -20,11 +20,11 @@ defmodule BlogApi.UserControllerTest do
       end)
       |> hd()
 
-    assert {:ok, invalid_token, _claims} = Blog.Token.generate_and_sign(%{"user_id" => user_id})
+    assert {:ok, valid_token, _claims} = Blog.Token.generate_and_sign(%{"user_id" => user_id})
 
     conn =
       conn
-      |> put_req_header("authorization", invalid_token)
+      |> put_req_header("authorization", "Bearer " <> valid_token)
       |> get(Routes.user_path(conn, :index))
 
     assert %{
@@ -54,7 +54,7 @@ defmodule BlogApi.UserControllerTest do
 
     conn =
       conn
-      |> put_req_header("authorization", invalid_token)
+      |> put_req_header("authorization", "Bearer " <> invalid_token)
       |> get(Routes.user_path(conn, :index))
 
     refute conn.halted

@@ -6,13 +6,8 @@ defmodule BlogApi.AuthPlug do
   def init(opts), do: opts
 
   def call(conn, _) do
-    {:ok, %{"user_id" => user_id}} =
-      conn
-      |> get_req_header("authorization")
-      |> List.first()
-      |> String.split(" ")
-      |> List.last()
-      |> Blog.Token.verify_and_validate()
+    ["Bearer " <> token] = get_req_header(conn, "authorization")
+    {:ok, %{"user_id" => user_id}} = Blog.Token.verify_and_validate(token)
 
     # 인증이 있어야만 접근할 수 있게 case문 사용
     case Accounts.get_user(user_id) do
