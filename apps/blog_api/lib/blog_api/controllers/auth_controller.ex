@@ -11,7 +11,7 @@ defmodule BlogApi.AuthController do
       ) do
     {:ok, %User{} = user} = Accounts.create_user(params)
 
-    token = BlogApi.Auth.login(user)
+    token = BlogApi.Auth.get_token(user)
 
     conn
     |> put_status(:created)
@@ -21,7 +21,7 @@ defmodule BlogApi.AuthController do
   def login(conn, %{"user_email" => user_email, "password" => password}) do
     {:ok, user} = Accounts.authenticate_by_username_and_pass(user_email, password)
 
-    token = BlogApi.Auth.login(user)
+    token = BlogApi.Auth.get_token(user)
 
     conn
     |> put_status(200)
