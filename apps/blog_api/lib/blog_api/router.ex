@@ -7,7 +7,7 @@ defmodule BlogApi.Router do
   end
 
   pipeline :auth do
-    plug BlogApi.Auth
+    plug BlogApi.AuthPlug
   end
 
   scope "/api/auth", BlogApi do
@@ -27,7 +27,6 @@ defmodule BlogApi.Router do
 
     post "/register", AuthController, :register
     post "/login", AuthController, :login
-    post "/logout", AuthController, :logout
   end
 
   if Mix.env() in [:dev, :test] do
