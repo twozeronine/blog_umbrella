@@ -26,7 +26,8 @@ defmodule Blog.MixProject do
   defp deps() do
     [
       {:phoenix_pubsub, "~> 2.0"},
-      {:argon2_elixir, "~> 3.0"}
+      {:argon2_elixir, "~> 3.0"},
+      {:joken, "~> 2.5"}
     ]
   end
 
