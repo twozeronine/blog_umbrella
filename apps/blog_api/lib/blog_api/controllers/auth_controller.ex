@@ -5,18 +5,23 @@ defmodule BlogApi.AuthController do
   alias BlogDomain.Accounts.User
 
   def register(conn, params) do
-    {:ok, %User{} = user} = Accounts.create_user(params)
+    {:ok, %User{id: user_id} = user} = Accounts.create_user(params)
+
+    {:ok, invalid_token, _claims} = Blog.Token.generate_and_sign(%{"user_id" => user_id})
 
     conn
     |> put_status(:created)
-    |> render("show.json", %{user: user, token: BlogApi.Auth.get_token(user)})
+    |> render("show.json", %{user: user, token: invalid_token})
   end
 
   def login(conn, %{"user_email" => user_email, "password" => password}) do
-    {:ok, user} = Accounts.authenticate_by_username_and_pass(user_email, password)
+    {:ok, %User{id: user_id} = user} =
+      Accounts.authenticate_by_username_and_pass(user_email, password)
+
+    {:ok, invalid_token, _claims} = Blog.Token.generate_and_sign(%{"user_id" => user_id})
 
     conn
     |> put_status(200)
-    |> render("show.json", %{user: user, token: BlogApi.Auth.get_token(user)})
+    |> render("show.json", %{user: user, token: invalid_token})
   end
 end
