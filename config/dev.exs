@@ -31,3 +31,5 @@ config :blog_client, BlogClient,
   api_url: "http://localhost:4000/api",
   default_client: BlogClient.HttpoisonClient,
   headers: [{"Content-Type", "application/json"}]
+
+config :joken, default_signer: "WyXp6HJItNZqkSvkPUHsQWKnChlLQQ+J8f3dMYCrQCKCfNpFiw8bjsd2+LOmGJOA"
