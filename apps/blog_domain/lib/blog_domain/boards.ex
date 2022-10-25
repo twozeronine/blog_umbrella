@@ -12,12 +12,6 @@ defmodule BlogDomain.Boards do
 
   def get_post(id), do: Repo.get(Post, id)
 
-  def get_user_post(%User{id: user_id}, post_id) do
-    Post
-    |> User.user_id_query(user_id)
-    |> Repo.get(post_id)
-  end
-
   def get_post_lock(post_id) do
     Post
     |> Post.post_lock_query()
@@ -26,12 +20,6 @@ defmodule BlogDomain.Boards do
 
   def post_list() do
     Post
-    |> Repo.all()
-  end
-
-  def list_user_posts(%User{id: user_id}) do
-    Post
-    |> User.user_id_query(user_id)
     |> Repo.all()
   end
 
@@ -53,43 +41,10 @@ defmodule BlogDomain.Boards do
     |> Repo.insert()
   end
 
-  def get_comment_user_name(id) do
-    id
-    |> Comment.get_comment_user_name()
-    |> Repo.one()
-  end
-
-  def get_comment(id), do: Repo.get(Comment, id)
-
-  def get_user_comment(%User{id: user_id}, comment_id) do
-    Comment
-    |> User.user_id_query(user_id)
-    |> Repo.get(comment_id)
-  end
-
   def get_post_comment(post_id, comment_id) do
     Post
     |> Post.get_comment_in_post_query(post_id, comment_id)
     |> Repo.one()
-  end
-
-  def get_user_post_all_comments(%User{id: user_id}, post_id) do
-    Post
-    |> User.user_id_query(user_id)
-    |> Post.get_all_comments_in_post_query(post_id)
-    |> Repo.all()
-  end
-
-  def get_post_usercomments(post_id, user_id) do
-    Post
-    |> Post.get_post_join_user_comments_query(post_id, user_id)
-    |> Repo.all()
-  end
-
-  def list_user_comments(%User{id: user_id}) do
-    Comment
-    |> User.user_id_query(user_id)
-    |> Repo.all()
   end
 
   def list_post_comments(post_id) do
