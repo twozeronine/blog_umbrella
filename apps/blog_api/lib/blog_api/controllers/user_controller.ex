@@ -24,21 +24,9 @@ defmodule BlogApi.UserController do
           "password" => _password
         } = params
       ) do
-    case Accounts.update_user(%User{id: id}, params) do
-      {:ok, {:ok, %User{} = user}} ->
-        render(conn, "show.json", %{user: user})
+    {:ok, {:ok, %User{} = user}} = Accounts.update_user(%User{id: id}, params)
 
-      {:ok, {:error, %Ecto.Changeset{} = changeset}} ->
-        conn |> render("errors.json", %{errors: Utils.format_changeset_errors(changeset)})
-
-      {:ok, {:error, :not_found}} ->
-        conn
-        |> put_status(:not_found)
-        |> put_view(BlogApi.ErrorView)
-        |> render(:"404")
-
-      {:error, _} ->
-        conn |> render("errors.json", %{errors: Utils.internal_server_error()})
-    end
+    conn
+    |> render("show.json", %{user: user})
   end
 end
