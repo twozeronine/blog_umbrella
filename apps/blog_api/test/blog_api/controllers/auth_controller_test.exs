@@ -28,37 +28,4 @@ defmodule BlogApi.AuthControllerTest do
     assert %{"data" => %{"user_email" => "User Email", "user_name" => "User", "token" => _token}} =
              json_response(conn, 200)
   end
-
-  test "POST /login again", %{conn: conn} do
-    %User{user_email: user_email, password: password} = user_fixture(@valid_params)
-
-    conn =
-      post(conn, Routes.auth_path(conn, :login), %{
-        "user_email" => user_email,
-        "password" => password
-      })
-
-    conn =
-      post(conn, Routes.auth_path(conn, :login), %{
-        "user_email" => user_email,
-        "password" => password
-      })
-
-    assert %{"errors" => "user already login", "success" => false} = json_response(conn, 400)
-  end
-
-  test "POST /logout", %{conn: conn} do
-    %User{user_email: user_email, password: password} = user_fixture(@valid_params)
-
-    conn =
-      post(conn, Routes.auth_path(conn, :login), %{
-        "user_email" => user_email,
-        "password" => password
-      })
-
-    conn = post(conn, Routes.auth_path(conn, :logout))
-
-    assert %{"data" => %{"token" => nil, "user_email" => "User Email", "user_name" => "User"}} =
-             json_response(conn, 200)
-  end
 end
