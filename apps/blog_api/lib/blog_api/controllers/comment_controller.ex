@@ -15,9 +15,9 @@ defmodule BlogApi.CommentController do
     render(conn, "show.json", %{comment: comment})
   end
 
-  def create(conn, %{"user" => %{"id" => id}, "post_id" => post_id, "comment" => comment_param}) do
+  def create(conn, %{"post_id" => post_id, "comment" => comment_param}) do
     {:ok, %Comment{} = comment} =
-      id
+      conn.assigns[:user_id]
       |> Accounts.get_user()
       |> Boards.write_comment(String.to_integer(post_id), comment_param)
 
@@ -28,13 +28,12 @@ defmodule BlogApi.CommentController do
   end
 
   def update(conn, %{
-        "user" => %{"id" => id},
         "post_id" => post_id,
         "id" => comment_id,
         "comment" => comment
       }) do
     {:ok, {:ok, %Comment{} = comment}} =
-      id
+      conn.assigns[:user_id]
       |> Accounts.get_user()
       |> Boards.update_post_comment(post_id, comment_id, comment)
 

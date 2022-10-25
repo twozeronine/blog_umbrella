@@ -15,9 +15,9 @@ defmodule BlogApi.PostController do
     render(conn, "show.json", %{post: post})
   end
 
-  def create(conn, %{"user" => %{"id" => id}, "post" => post_params}) do
+  def create(conn, %{"post" => post_params}) do
     {:ok, %Post{} = post} =
-      id
+      conn.assigns[:user_id]
       |> Accounts.get_user()
       |> Boards.create_post(post_params)
 

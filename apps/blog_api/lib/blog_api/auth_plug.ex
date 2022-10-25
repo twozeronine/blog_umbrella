@@ -18,6 +18,7 @@ defmodule BlogApi.AuthPlug do
 
       %User{} ->
         conn
+        |> assign(:user_id, user_id)
     end
   end
 end
