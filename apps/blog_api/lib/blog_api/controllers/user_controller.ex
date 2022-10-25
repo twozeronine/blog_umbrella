@@ -1,7 +1,6 @@
 defmodule BlogApi.UserController do
   use BlogApi, :controller
 
-  alias BlogApi.Utils
   alias BlogDomain.Accounts
   alias BlogDomain.Accounts.User
 
