@@ -44,15 +44,17 @@ defmodule BlogApi.Controllers.CommentControllerTest do
     assert %{"data" => %{"description" => "desc"}} = json_response(conn, 200)
   end
 
-  test "POST /posts/:post_id/comment/", %{conn: conn} do
-    %User{id: id} = owner = user_fixture(@valid_user_params)
+  test "POST /auth/posts/:post_id/comment/", %{conn: conn} do
+    %User{id: user_id} = owner = user_fixture(@valid_user_params)
     %Post{id: post_id} = post_fixture(owner, @valid_post_params)
 
+    assert {:ok, valid_token, _claims} = Blog.Token.generate_and_sign(%{"user_id" => user_id})
+
     conn =
-      post(
-        conn,
+      conn
+      |> put_req_header("authorization", "Bearer " <> valid_token)
+      |> post(
         Routes.comment_path(conn, :create, post_id, %{
-          "user" => %{"id" => id},
           "comment" => @valid_comment_params
         })
       )
@@ -60,16 +62,18 @@ defmodule BlogApi.Controllers.CommentControllerTest do
     assert %{"data" => %{"description" => "desc"}} = json_response(conn, 201)
   end
 
-  test "UPDATE /posts/:post_id/comments/:id", %{conn: conn} do
+  test "UPDATE /auth/posts/:post_id/comments/:id", %{conn: conn} do
     %User{id: owner_id} = owner = user_fixture(@valid_user_params)
     %Post{id: post_id} = post_fixture(owner, @valid_post_params)
     %Comment{id: id} = comment_fixture(owner, post_id, @valid_comment_params)
 
+    assert {:ok, valid_token, _claims} = Blog.Token.generate_and_sign(%{"user_id" => owner_id})
+
     conn =
-      put(
-        conn,
+      conn
+      |> put_req_header("authorization", "Bearer " <> valid_token)
+      |> put(
         Routes.comment_path(conn, :update, post_id, id, %{
-          "user" => %{"id" => owner_id},
           "comment" => %{"description" => "new desc"}
         })
       )

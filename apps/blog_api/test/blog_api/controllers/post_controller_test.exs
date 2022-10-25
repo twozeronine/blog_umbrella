@@ -46,12 +46,15 @@ defmodule BlogApi.Controllers.PostControllerTest do
              json_response(conn, 200)
   end
 
-  test "POST /posts/", %{conn: conn} do
+  test "POST /auth/posts/", %{conn: conn} do
     %User{id: user_id} = user_fixture(@valid_params)
 
+    assert {:ok, valid_token, _claims} = Blog.Token.generate_and_sign(%{"user_id" => user_id})
+
     conn =
-      post(conn, Routes.post_path(conn, :create), %{
-        "user" => %{"id" => user_id},
+      conn
+      |> put_req_header("authorization", "Bearer " <> valid_token)
+      |> post(Routes.post_path(conn, :create), %{
         "post" => @valid_attrs
       })
 

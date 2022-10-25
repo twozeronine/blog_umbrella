@@ -19,3 +19,5 @@ config :logger, level: :warn
 config :phoenix, :plug_init_mode, :runtime
 
 config :argon2_elixir, :rounds, 1
+
+config :joken, default_signer: "WyXp6HJItNZqkSvkPUHsQWKnChlLQQ+J8f3dMYCrQCKCfNpFiw8bjsd2+LOmGJOA"
