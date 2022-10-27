@@ -33,11 +33,4 @@ defmodule BlogDomain.Boards.Comment do
   def comment_lock_query(query) do
     from(q in query, [{:lock, "FOR UPDATE"}])
   end
-
-  def get_comment_user_name(id) do
-    from q in __MODULE__,
-      where: q.id == ^id,
-      join: u in assoc(q, :user),
-      select: %{user_name: u.user_name}
-  end
 end

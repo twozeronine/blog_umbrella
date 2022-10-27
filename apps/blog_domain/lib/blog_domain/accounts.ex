@@ -10,12 +10,6 @@ defmodule BlogDomain.Accounts do
 
   def get_user(id), do: Repo.get(User, id)
 
-  def get_user_by_user_email(user_email) do
-    User
-    |> User.user_email_query(user_email)
-    |> Repo.one()
-  end
-
   def authenticate_by_username_and_pass(user_email, password) do
     user = get_user_by_user_email(user_email)
 
@@ -48,5 +42,11 @@ defmodule BlogDomain.Accounts do
     User
     |> User.user_lock_query()
     |> Repo.get(id)
+  end
+
+  defp get_user_by_user_email(user_email) do
+    User
+    |> User.user_email_query(user_email)
+    |> Repo.one()
   end
 end

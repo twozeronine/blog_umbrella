@@ -1,7 +1,7 @@
 defmodule BlogApi.Controllers.CommentControllerTest do
   use BlogApi.ConnCase, async: true
 
-  alias BlogDomain.Boards
+  alias BlogDomain.Repo
   alias BlogDomain.Boards.{Post, Comment}
   alias BlogDomain.Accounts.User
 
@@ -88,6 +88,6 @@ defmodule BlogApi.Controllers.CommentControllerTest do
 
     delete(conn, Routes.comment_path(conn, :delete, post_id, id))
 
-    assert [] = Boards.get_user_post_all_comments(owner, post_id)
+    assert nil == Repo.get(Comment, id)
   end
 end
