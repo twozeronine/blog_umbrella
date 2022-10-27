@@ -1,6 +1,10 @@
 defmodule BlogClient.Client do
-  @callback get(url :: String.t(), headers :: List.t()) :: Tuple.t()
-  @callback post(url :: String.t(), req_body :: String.t(), headers :: List.t()) :: Tuple.t()
-  @callback update(url :: String.t(), req_body :: String.t(), headers :: List.t()) :: Tuple.t()
-  @callback delete(url :: String.t()) :: Tuple.t()
+  @typep url :: binary
+  @typep headers :: list()
+  @typep req_body :: binary()
+
+  @callback get(url, headers) :: Tuple.t()
+  @callback post(url, req_body, headers) :: Tuple.t()
+  @callback update(url, req_body, headers) :: Tuple.t()
+  @callback delete(url) :: Tuple.t()
 end

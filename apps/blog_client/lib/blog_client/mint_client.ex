@@ -44,7 +44,7 @@ defmodule BlogClient.MintClient do
           end
 
         Mint.HTTP.close(conn)
-        messages
+        {:ok, messages}
     end
   end
 

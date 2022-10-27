@@ -34,19 +34,19 @@ defmodule BlogClient.HttpoisonClient do
   defp handle_response(response) do
     case response do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        {:ok, {:status_code, 200}, {:body, body}}
+        {:ok, [{:status_code, 200}, {:body, body}]}
 
       {:ok, %HTTPoison.Response{status_code: 201, body: body}} ->
-        {:ok, {:status_code, 200}, {:body, body}}
+        {:ok, [{:status_code, 200}, {:body, body}]}
 
       {:ok, %HTTPoison.Response{status_code: 204, body: body}} ->
-        {:ok, {:status_code, 200}, {:body, body}}
+        {:ok, [{:status_code, 200}, {:body, body}]}
 
       {:ok, %HTTPoison.Response{status_code: 404}} ->
-        {:error, {:status_code, 404}, :not_found}
+        {:error, [{:status_code, 404}, :not_found]}
 
       {:error, %HTTPoison.Error{reason: reason}} ->
-        {:error, reason}
+        {:error, [reason]}
     end
   end
 end
