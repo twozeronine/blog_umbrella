@@ -3,7 +3,7 @@ defmodule BlogClient do
   @headers Application.compile_env(:blog_client, [BlogClient, :headers])
 
   def get_all_users(opts \\ []) do
-    "/auth/users"
+    "/users"
     |> get(opts)
   end
 
@@ -16,6 +16,13 @@ defmodule BlogClient do
     req_body = BlogClient.Api.register_user(user_name, user_email, password)
 
     "/register"
+    |> post(opts, req_body)
+  end
+
+  def login_user(user_email, password, opts \\ []) do
+    req_body = BlogClient.Api.login_user(user_email, password)
+
+    "/login"
     |> post(opts, req_body)
   end
 
@@ -37,7 +44,7 @@ defmodule BlogClient do
   def create_post(title, description, opts \\ []) do
     req_body = BlogClient.Api.create_post(title, description)
 
-    "/auth/posts"
+    "/posts"
     |> post(opts, req_body)
   end
 
@@ -66,14 +73,14 @@ defmodule BlogClient do
   def create_comment_in_post(post_id, description, opts \\ []) do
     req_body = BlogClient.Api.create_comment_in_post(description)
 
-    "/auth/posts/#{post_id}/comments"
+    "/posts/#{post_id}/comments"
     |> post(opts, req_body)
   end
 
   def update_comment_in_post(post_id, comment_id, description, opts \\ []) do
     req_body = BlogClient.Api.update_comment_in_post(description)
 
-    "/auth/posts/#{post_id}/comments/#{comment_id}"
+    "/posts/#{post_id}/comments/#{comment_id}"
     |> update(opts, req_body)
   end
 

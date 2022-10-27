@@ -4,6 +4,11 @@ defmodule BlogClient.Api do
     |> Jason.encode!()
   end
 
+  def login_user(user_email, password) do
+    %{user_email: user_email, password: password}
+    |> Jason.encode!()
+  end
+
   def update_user(params) do
     Jason.encode!(params)
   end
