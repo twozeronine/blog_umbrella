@@ -9,25 +9,22 @@ defmodule BlogApi.Router do
     plug BlogApi.AuthPlug
   end
 
-  scope "/api/auth", BlogApi do
-    pipe_through :auth
-
-    get "/users", UserController, :index
-    post "/posts", PostController, :create
-    post "/posts/:post_id/comments", CommentController, :create
-    put "/posts/:post_id/comments/:id", CommentController, :update
-  end
-
   scope "/api", BlogApi do
     pipe_through :api
 
     resources "/users", UserController, only: [:show, :update]
     resources "/posts", PostController, only: [:index, :show, :update, :delete]
-
     resources "/posts/:post_id/comments", CommentController, only: [:index, :show, :delete]
 
     post "/register", AuthController, :register
     post "/login", AuthController, :login
+
+    pipe_through :auth
+
+    get "/users", UserController, :index
+    post "/posts", PostController, :create
+
+    resources "/posts/:post_id/comments", CommentController, only: [:create, :update]
   end
 
   if Mix.env() in [:dev, :test] do
