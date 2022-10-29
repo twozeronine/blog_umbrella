@@ -8,7 +8,8 @@ config :blog_domain, BlogDomain.Repo,
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10,
-  port: 25432
+  port: 25432,
+  priv: "priv/repo"
 
 config :blog_api, BlogApi.Endpoint,
   http: [ip: {127, 0, 0, 1}, port: 4000],
@@ -16,7 +17,8 @@ config :blog_api, BlogApi.Endpoint,
   code_reloader: true,
   debug_errors: true,
   secret_key_base: "wj68pGVLMdwOol2JD6cReya05KJ0/roNunUGNFTChjDEDEb/v22Sdhjidt0KQR3w",
-  watchers: []
+  watchers: [],
+  server: true
 
 config :logger, :console, format: "[$level] $message\n"
 
