@@ -1,12 +1,9 @@
 import Config
 
 config :blog_domain, BlogDomain.Repo,
-  username: "postgres",
-  password: "postgres",
-  hostname: "localhost",
   database: "blog_prod",
   pool_size: 10,
-  port: 25432,
+  port: 5432,
   priv: "priv/repo"
 
 config :blog_api, BlogApi.Endpoint,
