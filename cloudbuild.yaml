@@ -1,0 +1,15 @@
+steps:
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "--build-arg",
+        "_MIX_ENV=${_MIX_ENV}",
+        "--build-arg",
+        "_RELEASE_NAME=${_RELEASE_NAME}",
+        "-t",
+        "gcr.io/${PROJECT_ID}/${_RELEASE_NAME}:${COMMIT_SHA}",
+        ".",
+      ]
+timeout: 1800s
+images: ["gcr.io/${PROJECT_ID}/${_RELEASE_NAME}:${COMMIT_SHA}"]
