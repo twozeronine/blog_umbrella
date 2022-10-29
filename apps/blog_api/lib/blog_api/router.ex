@@ -12,6 +12,8 @@ defmodule BlogApi.Router do
   scope "/api", BlogApi do
     pipe_through :api
 
+    get "/ping", PingController, :index
+
     resources "/users", UserController, only: [:show, :update]
     resources "/posts", PostController, only: [:index, :show, :update, :delete]
     resources "/posts/:post_id/comments", CommentController, only: [:index, :show, :delete]
