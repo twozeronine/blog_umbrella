@@ -1,6 +1,6 @@
 import Config
 
-if Mix.env() == :prod do
+if config_env() == :prod do
   config :blog_domain, BlogDomain.Repo,
     username: System.get_env("REPO_USERNAME"),
     password: System.get_env("REPO_PASSWORD"),
