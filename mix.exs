@@ -18,6 +18,7 @@ defmodule Blog.Umbrella.MixProject do
 
   defp aliases() do
     [
+      ecto_reset: ["cmd --app blog_domain mix ecto.reset"],
       setup: ["cmd mix setup"]
     ]
   end
