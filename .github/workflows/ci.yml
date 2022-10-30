@@ -31,8 +31,8 @@ jobs:
       - name: docker compose up -d
         run: docker compose up -d
 
-      - name: ecto setup
-        run: mix ecto setup
+      - name: mix setup
+        run: mix setup
 
       - name: mix test
         run: MIX_ENV=test mix test --max-failures 1 --warnings-as-errors
