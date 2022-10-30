@@ -32,7 +32,7 @@ jobs:
         run: docker compose up -d
 
       - name: ecto reset
-        run: mix ecto_reset
-        
+        run: mix ecto_setup
+
       - name: mix test
         run: MIX_ENV=test mix test --max-failures 1 --warnings-as-errors
