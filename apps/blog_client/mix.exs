@@ -11,7 +11,7 @@ defmodule BlogClient.MixProject do
       lockfile: "../../mix.lock",
       elixir: "~> 1.14-rc",
       start_permanent: Mix.env() == :prod,
-      deps: deps(),
+      deps: deps()
     ]
   end
 
