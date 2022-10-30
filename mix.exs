@@ -18,7 +18,7 @@ defmodule Blog.Umbrella.MixProject do
 
   defp aliases() do
     [
-      ecto_setup: ["cmd --app blog_domain mix ecto.setup"],
+      ecto_test_setup: ["cmd --app blog_domain MIX_ENV=test mix ecto.setup"],
       setup: ["cmd mix setup"]
     ]
   end
