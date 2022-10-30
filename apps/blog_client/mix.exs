@@ -12,7 +12,6 @@ defmodule BlogClient.MixProject do
       elixir: "~> 1.14-rc",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      aliases: aliases()
     ]
   end
 
@@ -28,12 +27,6 @@ defmodule BlogClient.MixProject do
       {:httpoison, "~> 1.8"},
       {:castore, "~> 0.1.0"},
       {:mint, "~> 1.0"}
-    ]
-  end
-
-  defp aliases() do
-    [
-      setup: []
     ]
   end
 end
