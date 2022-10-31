@@ -3,14 +3,12 @@ import Config
 config :blog_web,
   generators: [context_app: false]
 
-# Configures the endpoint
 config :blog_web, BlogWeb.Endpoint,
   url: [host: "localhost"],
   render_errors: [view: BlogWeb.ErrorView, accepts: ~w(html json), layout: false],
-  pubsub_server: BlogWeb.PubSub,
+  pubsub_server: Blog.PubSub,
   live_view: [signing_salt: "k7jl+RnG"]
 
-# Configure esbuild (the version is required)
 config :esbuild,
   version: "0.14.29",
   default: [

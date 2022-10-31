@@ -1,5 +1,5 @@
 defmodule BlogWeb do
-  def controller do
+  def controller() do
     quote do
       use Phoenix.Controller, namespace: BlogWeb
 
@@ -9,7 +9,7 @@ defmodule BlogWeb do
     end
   end
 
-  def view do
+  def view() do
     quote do
       use Phoenix.View,
         root: "lib/blog_web/templates",
@@ -22,7 +22,7 @@ defmodule BlogWeb do
     end
   end
 
-  def live_view do
+  def live_view() do
     quote do
       use Phoenix.LiveView,
         layout: {BlogWeb.LayoutView, "live.html"}
@@ -31,7 +31,7 @@ defmodule BlogWeb do
     end
   end
 
-  def live_component do
+  def live_component() do
     quote do
       use Phoenix.LiveComponent
 
@@ -39,7 +39,7 @@ defmodule BlogWeb do
     end
   end
 
-  def component do
+  def component() do
     quote do
       use Phoenix.Component
 
@@ -47,7 +47,7 @@ defmodule BlogWeb do
     end
   end
 
-  def router do
+  def router() do
     quote do
       use Phoenix.Router
 
@@ -57,14 +57,14 @@ defmodule BlogWeb do
     end
   end
 
-  def channel do
+  def channel() do
     quote do
       use Phoenix.Channel
       import BlogWeb.Gettext
     end
   end
 
-  defp view_helpers do
+  defp view_helpers() do
     quote do
       use Phoenix.HTML
 

@@ -1,7 +1,7 @@
 defmodule BlogWeb.MixProject do
   use Mix.Project
 
-  def project do
+  def project() do
     [
       app: :blog_web,
       version: "0.1.0",
@@ -18,7 +18,7 @@ defmodule BlogWeb.MixProject do
     ]
   end
 
-  def application do
+  def application() do
     [
       mod: {BlogWeb.Application, []},
       extra_applications: [:logger, :runtime_tools]
@@ -28,12 +28,14 @@ defmodule BlogWeb.MixProject do
   defp elixirc_paths(:test), do: ["lib", "test/support"]
   defp elixirc_paths(_), do: ["lib"]
 
-  defp deps do
+  defp deps() do
     [
+      {:blog, in_umbrella: true},
+      {:blog_domain, in_umbrella: true},
       {:phoenix, "~> 1.6.12"},
       {:phoenix_html, "~> 3.0"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
-      {:phoenix_live_view, "~> 0.17.5", override: true},
+      {:phoenix_live_view, "~> 0.18"},
       {:floki, ">= 0.30.0", only: :test},
       {:phoenix_live_dashboard, "~> 0.6"},
       {:esbuild, "~> 0.4", runtime: Mix.env() == :dev},
@@ -45,7 +47,7 @@ defmodule BlogWeb.MixProject do
     ]
   end
 
-  defp aliases do
+  defp aliases() do
     [
       setup: ["deps.get"],
       "assets.deploy": ["esbuild default --minify", "phx.digest"]

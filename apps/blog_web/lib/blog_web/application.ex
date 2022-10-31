@@ -8,7 +8,7 @@ defmodule BlogWeb.Application do
       BlogWeb.Endpoint
     ]
 
-    opts = [strategy: :one_for_one, name: BlogWeb.Supervisor]
+    opts = [strategy: :one_for_one, name: __MODULE__]
     Supervisor.start_link(children, opts)
   end
 

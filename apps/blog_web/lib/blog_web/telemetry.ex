@@ -15,7 +15,7 @@ defmodule BlogWeb.Telemetry do
     Supervisor.init(children, strategy: :one_for_one)
   end
 
-  def metrics do
+  def metrics() do
     [
       summary("phoenix.endpoint.stop.duration",
         unit: {:native, :millisecond}
@@ -31,7 +31,7 @@ defmodule BlogWeb.Telemetry do
     ]
   end
 
-  defp periodic_measurements do
+  defp periodic_measurements() do
     []
   end
 end
