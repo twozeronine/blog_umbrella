@@ -14,6 +14,8 @@ defmodule BlogWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+    live "/posts", PostsLive
+    live "/posts/:id", PostsLive, :show
   end
 
   if Mix.env() in [:dev, :test] do
