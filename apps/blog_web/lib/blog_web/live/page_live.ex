@@ -21,8 +21,8 @@ defmodule BlogWeb.PageLive do
         register_modal: false,
         login_modal: false,
         post_modal: false,
-        post_write_modal: false,
-        comment_write_modal: false
+        post_form_modal: false,
+        comment_form_modal: false
       })
 
     {:ok, socket}
@@ -34,11 +34,11 @@ defmodule BlogWeb.PageLive do
       [post | socket.assigns.posts]
       |> Enum.sort(&(&1.id <= &2.id))
 
-    {:noreply, assign(socket, %{posts: posts, post_write_modal: false})}
+    {:noreply, assign(socket, %{posts: posts, post_form_modal: false})}
   end
 
   def handle_info({:comment_created, _comment}, socket) do
-    {:noreply, assign(socket, %{comment_write_modal: false})}
+    {:noreply, assign(socket, %{comment_form_modal: false})}
   end
 
   @impl true
@@ -80,8 +80,17 @@ defmodule BlogWeb.PageLive do
     {:noreply, assign(socket, %{user_id: nil})}
   end
 
-  def handle_event("write_comment", _params, socket) do
-    {:noreply, assign(socket, %{comment_write_modal: true, post_modal: false})}
+  def handle_event("post_view", %{"id" => post_id}, socket) do
+    {:noreply, assign(socket, %{post: Boards.get_post_preload(post_id), post_modal: true})}
+  end
+
+  def handle_event("post_new", _params, socket) do
+    {:noreply, assign(socket, %{post_form_modal: true})}
+  end
+
+  def handle_event("comment_new", %{"post_id" => post_id}, socket) do
+    post_id = String.to_integer(post_id)
+    {:noreply, assign(socket, %{comment_form_modal: true, post_modal: false, post_id: post_id})}
   end
 
   def handle_event("open", %{"id" => "register-modal"}, socket) do
@@ -92,23 +101,6 @@ defmodule BlogWeb.PageLive do
     {:noreply, assign(socket, %{login_modal: true})}
   end
 
-  def handle_event("post_view", %{"id" => post_id}, socket) do
-    {:noreply, assign(socket, %{post: Boards.get_post_preload(post_id), post_modal: true})}
-  end
-
-  def handle_event("post_new", _params, socket) do
-    {:noreply, assign(socket, %{post_write_modal: true})}
-  end
-
-  def handle_event("comment_new", %{"post_id" => post_id}, socket) do
-    post_id = String.to_integer(post_id)
-    {:noreply, assign(socket, %{comment_write_modal: true, post_modal: false, post_id: post_id})}
-  end
-
-  def handle_event("post_edit", %{"post_id" => post_id}, socket) do
-    {:noreply, assign(socket, %{post_write_modal: true})}
-  end
-
   def handle_event("close", %{"id" => "register-modal"}, socket) do
     {:noreply, assign(socket, %{register_modal: false, user_changeset: Accounts.change_user()})}
   end
@@ -117,11 +109,11 @@ defmodule BlogWeb.PageLive do
     {:noreply, assign(socket, %{login_modal: false, user_changeset: Accounts.change_user()})}
   end
 
-  def handle_event("close", %{"id" => "post_modal"}, socket) do
+  def handle_event("close", %{"id" => "post-modal"}, socket) do
     {:noreply, assign(socket, %{post_modal: false})}
   end
 
-  def handle_event("close", %{"id" => "post_write_modal"}, socket) do
-    {:noreply, assign(socket, %{post_write_modal: false})}
+  def handle_event("close", %{"id" => "post-form_modal"}, socket) do
+    {:noreply, assign(socket, %{post_form_modal: false})}
   end
 end
