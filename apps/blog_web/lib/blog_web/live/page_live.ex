@@ -22,6 +22,7 @@ defmodule BlogWeb.PageLive do
         login_modal: false,
         post_modal: false,
         post_write_modal: false,
+        post_edit_modal: false,
         comment_form_modal: false
       })
 
@@ -35,6 +36,14 @@ defmodule BlogWeb.PageLive do
       |> Enum.sort(&(&1.id <= &2.id))
 
     {:noreply, assign(socket, %{posts: posts, post_write_modal: false})}
+  end
+
+  def handle_info({:post_updated, post}, socket) do
+    posts =
+      [post | socket.assigns.posts]
+      |> Enum.sort(&(&1.id <= &2.id))
+
+    {:noreply, assign(socket, %{posts: posts, post_edit_modal: false})}
   end
 
   def handle_info({:comment_created, _comment}, socket) do
@@ -128,7 +137,11 @@ defmodule BlogWeb.PageLive do
     {:noreply, assign(socket, %{post_modal: false})}
   end
 
-  def handle_event("close", %{"id" => "post-form_modal"}, socket) do
+  def handle_event("close", %{"id" => "post-write-modal"}, socket) do
     {:noreply, assign(socket, %{post_write_modal: false})}
+  end
+
+  def handle_event("close", %{"id" => "post-edit-modal"}, socket) do
+    {:noreply, assign(socket, %{post_edit_modal: false})}
   end
 end

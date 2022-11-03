@@ -3,8 +3,9 @@ defmodule BlogWeb.CommentComponent do
 
   def render(assigns) do
     ~H"""
-      <div>
+      <div class="comment">
         <li><%= @comment.description %></li>
+        <button phx-click="comment-edit" phx-value-id={@comment.id}> Edit</button>
       </div>
     """
   end
