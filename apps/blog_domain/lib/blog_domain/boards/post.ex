@@ -54,6 +54,12 @@ defmodule BlogDomain.Boards.Post do
     ])
   end
 
+  def preload_comment_post_query(query) do
+    from(q in query, [
+      {:preload, [:comments]}
+    ])
+  end
+
   def post_lock_query(query) do
     from(q in query, [{:lock, "FOR UPDATE"}])
   end
