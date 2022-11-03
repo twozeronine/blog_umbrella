@@ -8,7 +8,7 @@ defmodule BlogWeb.HeaderComponent do
       <nav>
         <ul>
         <%= if @user_id do %>
-          아이디있음
+          <li><a href="#" phx-click="logout"> Logout </a></li>
         <% else %>
           <li><a href="#" phx-click="open" phx-value-id="register-modal"> Register </a></li>
           <li><a href="#" phx-click="open" phx-value-id="login-modal"> Login </a></li>
