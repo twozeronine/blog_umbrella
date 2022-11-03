@@ -10,7 +10,7 @@ defmodule BlogDomain.Boards do
     %Post{user_id: user_id}
     |> Post.changeset(params)
     |> Repo.insert()
-    |> broadcast(:post_created)
+    |> broadcast_post(:post_created)
   end
 
   def get_post(id), do: Repo.get(Post, id)
@@ -48,7 +48,7 @@ defmodule BlogDomain.Boards do
       end
       |> Repo.transaction()
 
-    {:ok, broadcast(result, :post_updated)}
+    {:ok, broadcast_post(result, :post_updated)}
   end
 
   def delete_post(%Post{} = post), do: Repo.delete(post)
@@ -57,7 +57,7 @@ defmodule BlogDomain.Boards do
     %Comment{user_id: user_id, post_id: post_id}
     |> Comment.changeset(params)
     |> Repo.insert()
-    |> broadcast(:post_created)
+    |> broadcast_comment(:comment_created)
   end
 
   def get_post_comment(post_id, comment_id) do
@@ -73,13 +73,16 @@ defmodule BlogDomain.Boards do
   end
 
   def update_post_comment(%User{} = user, post_id, comment_id, params \\ %{}) do
-    fn ->
-      case get_user_post_comment_lock(user, post_id, comment_id) do
-        %Comment{} = comment -> Comment.changeset(comment, params) |> Repo.update()
-        nil -> {:error, :not_found}
+    {:ok, result} =
+      fn ->
+        case get_user_post_comment_lock(user, post_id, comment_id) do
+          %Comment{} = comment -> Comment.changeset(comment, params) |> Repo.update()
+          nil -> {:error, :not_found}
+        end
       end
-    end
-    |> Repo.transaction()
+      |> Repo.transaction()
+
+    {:ok, broadcast_comment(result, :comment_updated)}
   end
 
   def delete_comment(%Comment{} = comment), do: Repo.delete(comment)
@@ -102,15 +105,21 @@ defmodule BlogDomain.Boards do
     |> Repo.get(comment_id)
   end
 
-  defp broadcast({:ok, post_or_comment}, event) do
+  defp broadcast_post({:ok, post}, event) do
+    broadcast({:ok, post}, event)
+  end
+
+  defp broadcast_comment({:ok, comment}, event) do
+    broadcast({:ok, comment}, event)
+  end
+
+  defp broadcast({:ok, topic}, event) do
     Phoenix.PubSub.broadcast(
       Blog.PubSub,
       @blog_topic,
-      {event, post_or_comment}
+      {event, topic}
     )
 
-    {:ok, post_or_comment}
+    {:ok, topic}
   end
-
-  defp broadcast({:error, _reason} = error, _event), do: error
 end

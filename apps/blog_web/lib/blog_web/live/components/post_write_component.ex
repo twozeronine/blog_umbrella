@@ -1,4 +1,4 @@
-defmodule BlogWeb.PostFormComponent do
+defmodule BlogWeb.PostWriteComponent do
   use BlogWeb, :live_component
 
   alias BlogDomain.Boards

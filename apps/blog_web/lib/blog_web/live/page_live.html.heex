@@ -16,8 +16,8 @@
   <%= if @post_modal do %>
     <.modal modal_id="post-modal"><.live_component module={BlogWeb.PostComponent} id="modal-post" post={@post} user_id={@user_id} /></.modal>
   <% end %>
-  <%= if @post_form_modal do %>
-    <.modal modal_id="post-form-modal"><.live_component module={BlogWeb.PostFormComponent} id="modal-post-write" user_id={@user_id} /></.modal>
+  <%= if @post_write_modal do %>
+    <.modal modal_id="post-write-modal"><.live_component module={BlogWeb.PostWriteComponent} id="modal-post-write" user_id={@user_id} /></.modal>
   <% end %>
   <%= if @comment_form_modal do %>
     <.modal modal_id="comment-form-modal"><.live_component module={BlogWeb.CommentFormComponent} id="modal-comment-write" user_id={@user_id} post_id={@post_id} /></.modal>
