@@ -13,7 +13,7 @@ defmodule BlogWeb.Router do
   scope "/", BlogWeb do
     pipe_through :browser
 
-      live "/", PageLive
+    live "/", PageLive
   end
 
   if Mix.env() in [:dev, :test] do

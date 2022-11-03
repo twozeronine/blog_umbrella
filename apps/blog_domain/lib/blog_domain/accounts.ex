@@ -43,7 +43,7 @@ defmodule BlogDomain.Accounts do
     |> User.changeset(params)
   end
 
-  def change_login_user(params \\ %{} ) do
+  def change_login_user(params \\ %{}) do
     %User{}
     |> User.login_changeset(params)
   end
