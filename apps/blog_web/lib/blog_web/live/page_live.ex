@@ -23,7 +23,8 @@ defmodule BlogWeb.PageLive do
         post_modal: false,
         post_write_modal: false,
         post_edit_modal: false,
-        comment_form_modal: false
+        comment_write_modal: false,
+        comment_edit_modal: false
       })
 
     {:ok, socket}
@@ -47,11 +48,11 @@ defmodule BlogWeb.PageLive do
   end
 
   def handle_info({:comment_created, _comment}, socket) do
-    {:noreply, assign(socket, %{comment_form_modal: false})}
+    {:noreply, assign(socket, %{comment_write_modal: false})}
   end
 
   def handle_info({:comment_updated, _comment}, socket) do
-    {:noreply, assign(socket, %{comment_form_modal: false})}
+    {:noreply, assign(socket, %{comment_edit_modal: false})}
   end
 
   @impl true
@@ -110,10 +111,19 @@ defmodule BlogWeb.PageLive do
 
     {:noreply,
      assign(socket, %{
-       comment_form_modal: true,
+       comment_write_modal: true,
+       post_modal: false,
+       post_id: post_id
+     })}
+  end
+
+  def handle_event("comment-edit", %{"id" => comment_id, "post-id" => post_id}, socket) do
+    {:noreply,
+     assign(socket, %{
+       comment_edit_modal: true,
        post_modal: false,
        post_id: post_id,
-       comment_form_action: :comment_new
+       comment_id: comment_id
      })}
   end
 
@@ -143,5 +153,13 @@ defmodule BlogWeb.PageLive do
 
   def handle_event("close", %{"id" => "post-edit-modal"}, socket) do
     {:noreply, assign(socket, %{post_edit_modal: false})}
+  end
+
+  def handle_event("close", %{"id" => "comment-write-modal"}, socket) do
+    {:noreply, assign(socket, %{comment_write_modal: false})}
+  end
+
+  def handle_event("close", %{"id" => "comment-edit-modal"}, socket) do
+    {:noreply, assign(socket, %{comment_edit_modal: false})}
   end
 end

@@ -5,7 +5,9 @@ defmodule BlogWeb.CommentComponent do
     ~H"""
       <div class="comment">
         <li><%= @comment.description %></li>
-        <button phx-click="comment-edit" phx-value-id={@comment.id}> Edit</button>
+        <%= if @user_id == @comment.user_id do %>
+        <button phx-click="comment-edit" phx-value-id={@comment.id} phx-value-post-id={@post_id}> Edit</button>
+        <% end %>
       </div>
     """
   end

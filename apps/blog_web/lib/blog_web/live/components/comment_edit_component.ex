@@ -1,8 +1,8 @@
-defmodule BlogWeb.CommentFormComponent do
+defmodule BlogWeb.CommentEditComponent do
   use BlogWeb, :live_component
 
-  alias BlogDomain.Accounts.User
   alias BlogDomain.Boards
+  alias BlogDomain.Accounts
 
   @impl true
   def mount(socket) do
@@ -14,11 +14,14 @@ defmodule BlogWeb.CommentFormComponent do
     {:noreply, assign(socket, %{comment_changeset: Boards.change_comment(comment_params)})}
   end
 
-  def handle_event("write", %{"comment" => comment_params}, socket) do
+  def handle_event("edit", %{"comment" => comment_params}, socket) do
+    user = Accounts.get_user(socket.assigns.user_id)
+
     {:ok, _comment} =
-      Boards.write_comment(
-        %User{id: socket.assigns.user_id},
+      Boards.update_post_comment(
+        user,
         socket.assigns.post_id,
+        socket.assigns.comment_id,
         comment_params
       )
 

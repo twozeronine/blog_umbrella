@@ -13,7 +13,7 @@ defmodule BlogWeb.PostComponent do
         <button phx-click="comment_new" phx-value-post_id={@post.id}>Write Comment</button>
         <% end %>
         <%= for comment <- @post.comments do %>
-          <.live_component module={BlogWeb.CommentComponent} id={comment.id} comment={comment}/>
+          <.live_component module={BlogWeb.CommentComponent} id={comment.id} post_id={@post.id} user_id={@user_id} comment={comment}/>
         <% end %>
       </ul>
     </div>
