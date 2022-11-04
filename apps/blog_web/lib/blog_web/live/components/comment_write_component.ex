@@ -15,13 +15,16 @@ defmodule BlogWeb.CommentWriteComponent do
   end
 
   def handle_event("write", %{"comment" => comment_params}, socket) do
-    {:ok, _comment} =
-      Boards.write_comment(
-        %User{id: socket.assigns.user_id},
-        socket.assigns.post_id,
-        comment_params
-      )
+    case Boards.write_comment(
+           %User{id: socket.assigns.user_id},
+           socket.assigns.post_id,
+           comment_params
+         ) do
+      {:ok, _comment} ->
+        {:noreply, socket}
 
-    {:noreply, socket}
+      {:error, _changeset} ->
+        {:noreply, assign(socket, %{comment_changeset: Boards.change_comment()})}
+    end
   end
 end

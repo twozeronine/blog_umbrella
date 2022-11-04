@@ -15,7 +15,9 @@ defmodule BlogWeb.PostWriteComponent do
   end
 
   def handle_event("write", %{"post" => post_params}, socket) do
-    {:ok, _post} = Boards.create_post(%User{id: socket.assigns.user_id}, post_params)
-    {:noreply, socket}
+    case Boards.create_post(%User{id: socket.assigns.user_id}, post_params) do
+      {:ok, _post} -> {:noreply, socket}
+      {:error, _changeset} -> {:noreply, assign(socket, %{post_changeset: Boards.change_post()})}
+    end
   end
 end

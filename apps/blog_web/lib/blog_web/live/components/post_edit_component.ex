@@ -14,7 +14,12 @@ defmodule BlogWeb.PostEditComponent do
   end
 
   def handle_event("edit", %{"post" => post_params}, socket) do
-    {:ok, _post} = Boards.update_post(socket.assigns.post_id, post_params)
-    {:noreply, socket}
+    case Boards.update_post(socket.assigns.post_id, post_params) do
+      {:ok, {:ok, _post}} ->
+        {:noreply, socket}
+
+      {:ok, {:error, _changeset}} ->
+        {:noreply, assign(socket, %{post_changeset: Boards.change_post()})}
+    end
   end
 end

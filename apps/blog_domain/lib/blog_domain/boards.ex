@@ -10,7 +10,7 @@ defmodule BlogDomain.Boards do
     %Post{user_id: user_id}
     |> Post.changeset(params)
     |> Repo.insert()
-    |> broadcast_post(:post_created)
+    |> broadcast(:post_created)
   end
 
   def get_post(id), do: Repo.get(Post, id)
@@ -48,7 +48,7 @@ defmodule BlogDomain.Boards do
       end
       |> Repo.transaction()
 
-    {:ok, broadcast_post(result, :post_updated)}
+    {:ok, broadcast(result, :post_updated)}
   end
 
   def delete_post(%Post{} = post), do: Repo.delete(post)
@@ -57,7 +57,7 @@ defmodule BlogDomain.Boards do
     %Comment{user_id: user_id, post_id: post_id}
     |> Comment.changeset(params)
     |> Repo.insert()
-    |> broadcast_comment(:comment_created)
+    |> broadcast(:comment_created)
   end
 
   def get_post_comment(post_id, comment_id) do
@@ -82,7 +82,7 @@ defmodule BlogDomain.Boards do
       end
       |> Repo.transaction()
 
-    {:ok, broadcast_comment(result, :comment_updated)}
+    {:ok, broadcast(result, :comment_updated)}
   end
 
   def delete_comment(%Comment{} = comment), do: Repo.delete(comment)
@@ -105,14 +105,6 @@ defmodule BlogDomain.Boards do
     |> Repo.get(comment_id)
   end
 
-  defp broadcast_post({:ok, post}, event) do
-    broadcast({:ok, post}, event)
-  end
-
-  defp broadcast_comment({:ok, comment}, event) do
-    broadcast({:ok, comment}, event)
-  end
-
   defp broadcast({:ok, topic}, event) do
     Phoenix.PubSub.broadcast(
       Blog.PubSub,
@@ -122,4 +114,6 @@ defmodule BlogDomain.Boards do
 
     {:ok, topic}
   end
+
+  defp broadcast({:error, _changeset} = error, _event), do: error
 end

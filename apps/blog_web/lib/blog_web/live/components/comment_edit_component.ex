@@ -17,14 +17,17 @@ defmodule BlogWeb.CommentEditComponent do
   def handle_event("edit", %{"comment" => comment_params}, socket) do
     user = Accounts.get_user(socket.assigns.user_id)
 
-    {:ok, _comment} =
-      Boards.update_post_comment(
-        user,
-        socket.assigns.post_id,
-        socket.assigns.comment_id,
-        comment_params
-      )
+    case Boards.update_post_comment(
+           user,
+           socket.assigns.post_id,
+           socket.assigns.comment_id,
+           comment_params
+         ) do
+      {:ok, {:ok, _comment}} ->
+        {:noreply, socket}
 
-    {:noreply, socket}
+      {:ok, {:error, _changeset}} ->
+        {:noreply, assign(socket, %{comment_changeset: Boards.change_comment()})}
+    end
   end
 end
