@@ -15,7 +15,13 @@ defmodule BlogWeb.PageLive do
     socket =
       socket
       # 변수
-      |> assign(%{user_id: nil, user_changeset: Accounts.change_user(), posts: Boards.post_list()})
+      |> assign(%{
+        user_id: nil,
+        user_changeset: Accounts.change_user(),
+        posts:
+          Boards.post_list()
+          |> Enum.sort(&(&1.id <= &2.id))
+      })
       # 모달 제어
       |> assign(%{
         register_modal: false,
@@ -39,12 +45,14 @@ defmodule BlogWeb.PageLive do
     {:noreply, assign(socket, %{posts: posts, post_write_modal: false})}
   end
 
-  def handle_info({:post_updated, post}, socket) do
-    posts =
-      [post | socket.assigns.posts]
-      |> Enum.sort(&(&1.id <= &2.id))
-
-    {:noreply, assign(socket, %{posts: posts, post_edit_modal: false})}
+  def handle_info({:post_updated, _post}, socket) do
+    {:noreply,
+     assign(socket, %{
+       posts:
+         Boards.post_list()
+         |> Enum.sort(&(&1.id <= &2.id)),
+       post_edit_modal: false
+     })}
   end
 
   def handle_info({:comment_created, _comment}, socket) do

@@ -10,7 +10,7 @@ defmodule BlogWeb.PostEditComponent do
 
   @impl true
   def handle_event("validate_check", %{"post" => post_params}, socket) do
-    {:noreply, assign(socket, %{post_changet: Boards.change_post(post_params)})}
+    {:noreply, assign(socket, %{post_changeset: Boards.change_post(post_params)})}
   end
 
   def handle_event("edit", %{"post" => post_params}, socket) do
