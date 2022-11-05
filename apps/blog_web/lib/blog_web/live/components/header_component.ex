@@ -15,7 +15,7 @@ defmodule BlogWeb.HeaderComponent do
         <% end %>
         </ul>
       </nav>
-      <a href="https://phoenixframework.org/" class="phx-logo">
+      <a href="#" phx-click="home" phx-value-id={@user_id} class="phx-logo">
         <img src={Routes.static_path(@socket, "/images/phoenix.png")} alt="Phoenix Framework Logo"/>
       </a>
     </section>

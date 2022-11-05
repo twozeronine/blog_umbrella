@@ -135,6 +135,14 @@ defmodule BlogWeb.PageLive do
      })}
   end
 
+  def handle_event("home", %{"id" => user_id}, socket) do
+    assign_home_user_id(String.to_integer(user_id), socket)
+  end
+
+  def handle_event("home", %{}, socket) do
+    assign_home_user_id(nil, socket)
+  end
+
   def handle_event("open", %{"id" => "register-modal"}, socket) do
     {:noreply, assign(socket, %{register_modal: true})}
   end
@@ -169,5 +177,22 @@ defmodule BlogWeb.PageLive do
 
   def handle_event("close", %{"id" => "comment-edit-modal"}, socket) do
     {:noreply, assign(socket, %{comment_edit_modal: false})}
+  end
+
+  defp assign_home_user_id(user_id, socket) do
+    {:noreply,
+     assign(
+       socket,
+       %{
+         user_id: user_id,
+         register_modal: false,
+         login_modal: false,
+         post_modal: false,
+         post_write_modal: false,
+         post_edit_modal: false,
+         comment_write_modal: false,
+         comment_edit_modal: false
+       }
+     )}
   end
 end
