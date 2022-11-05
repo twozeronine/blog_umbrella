@@ -6,6 +6,7 @@ defmodule BlogWeb.ConnCase do
       import Plug.Conn
       import Phoenix.ConnTest
       import BlogWeb.ConnCase
+      import BlogWeb.FixtureHelper
 
       alias BlogWeb.Router.Helpers, as: Routes
 
