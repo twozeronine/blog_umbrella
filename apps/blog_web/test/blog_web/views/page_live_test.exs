@@ -3,8 +3,6 @@ defmodule BlogWeb.PageLiveTest do
 
   import Phoenix.LiveViewTest
 
-  alias BlogDomain.Boards
-
   test "renders", %{conn: conn} do
     {:ok, view, html} = live(conn, "/")
 
@@ -12,7 +10,7 @@ defmodule BlogWeb.PageLiveTest do
     assert render(view) =~ "Welcome to Blog!"
   end
 
-  test "renders posts component", %{conn: conn} do
+  test "renders posts component", %{conn: _conn} do
     user = user_fixture()
     posts = Enum.map(1..5, fn _ -> post_fixture(user) end)
 
