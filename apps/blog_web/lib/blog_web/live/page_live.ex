@@ -6,11 +6,9 @@ defmodule BlogWeb.PageLive do
 
   alias BlogDomain.Boards
 
-  @blog_topic "blog"
-
   @impl true
   def mount(_params, _seission, socket) do
-    if connected?(socket), do: Phoenix.PubSub.subscribe(Blog.PubSub, @blog_topic)
+    if connected?(socket), do: Blog.PubSub.subscribe()
 
     socket =
       socket
@@ -37,7 +35,7 @@ defmodule BlogWeb.PageLive do
   end
 
   @impl true
-  def handle_info({:post_created, post}, socket) do
+  def handle_info({{:ok, post}, :post_created}, socket) do
     posts =
       [post | socket.assigns.posts]
       |> Enum.sort(&(&1.id <= &2.id))
@@ -45,7 +43,7 @@ defmodule BlogWeb.PageLive do
     {:noreply, assign(socket, %{posts: posts, post_write_modal: false})}
   end
 
-  def handle_info({:post_updated, _post}, socket) do
+  def handle_info({{:ok, _post}, :post_updated}, socket) do
     {:noreply,
      assign(socket, %{
        posts:
@@ -55,12 +53,16 @@ defmodule BlogWeb.PageLive do
      })}
   end
 
-  def handle_info({:comment_created, _comment}, socket) do
+  def handle_info({{:ok, _comment}, :comment_created}, socket) do
     {:noreply, assign(socket, %{comment_write_modal: false})}
   end
 
-  def handle_info({:comment_updated, _comment}, socket) do
+  def handle_info({{:ok, _comment}, :comment_updated}, socket) do
     {:noreply, assign(socket, %{comment_edit_modal: false})}
+  end
+
+  def handle_info({{:error, _changeset}, _message}, socket) do
+    {:noreply, socket}
   end
 
   @impl true

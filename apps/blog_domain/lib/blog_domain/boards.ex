@@ -3,14 +3,16 @@ defmodule BlogDomain.Boards do
 
   alias BlogDomain.Accounts.User
   alias BlogDomain.Boards.{Post, Comment}
-
-  @blog_topic "blog"
+  alias Blog.PubSub
 
   def create_post(%User{id: user_id}, params \\ %{}) do
-    %Post{user_id: user_id}
-    |> Post.changeset(params)
-    |> Repo.insert()
-    |> broadcast(:post_created)
+    result =
+      %Post{user_id: user_id}
+      |> Post.changeset(params)
+      |> Repo.insert()
+
+    PubSub.broadcast(result, :post_created)
+    result
   end
 
   def get_post(id), do: Repo.get(Post, id)
@@ -48,16 +50,22 @@ defmodule BlogDomain.Boards do
       end
       |> Repo.transaction()
 
-    {:ok, broadcast(result, :post_updated)}
+    PubSub.broadcast(result, :post_updated)
+
+    {:ok, result}
   end
 
   def delete_post(%Post{} = post), do: Repo.delete(post)
 
   def write_comment(%User{id: user_id}, post_id, params \\ %{}) do
-    %Comment{user_id: user_id, post_id: post_id}
-    |> Comment.changeset(params)
-    |> Repo.insert()
-    |> broadcast(:comment_created)
+    result =
+      %Comment{user_id: user_id, post_id: post_id}
+      |> Comment.changeset(params)
+      |> Repo.insert()
+
+    PubSub.broadcast(result, :comment_created)
+
+    result
   end
 
   def get_post_comment(post_id, comment_id) do
@@ -82,7 +90,9 @@ defmodule BlogDomain.Boards do
       end
       |> Repo.transaction()
 
-    {:ok, broadcast(result, :comment_updated)}
+    PubSub.broadcast(result, :comment_updated)
+
+    {:ok, result}
   end
 
   def delete_comment(%Comment{} = comment), do: Repo.delete(comment)
@@ -104,16 +114,4 @@ defmodule BlogDomain.Boards do
     |> Comment.comment_lock_query()
     |> Repo.get(comment_id)
   end
-
-  defp broadcast({:ok, topic}, event) do
-    Phoenix.PubSub.broadcast(
-      Blog.PubSub,
-      @blog_topic,
-      {event, topic}
-    )
-
-    {:ok, topic}
-  end
-
-  defp broadcast({:error, _changeset} = error, _event), do: error
 end
