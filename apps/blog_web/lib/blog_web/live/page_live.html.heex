@@ -1,3 +1,31 @@
+<.live_component module={BlogWeb.HeaderComponent} id="header" user_id={@user_id}/>
+  
 <section class="phx-hero">
   <h1><%= gettext "Welcome to %{name}!", name: "Blog" %></h1>
 </section>
+  
+<.live_component module={BlogWeb.PostsComponent} id="post-component" posts={@posts} user_id={@user_id} />
+
+<div>
+  <%= if @register_modal do %>
+    <.modal modal_id="register-modal" ><.live_component module={BlogWeb.RegisterFormComponent} id="modal-register" user_changeset={@user_changeset}/></.modal>
+  <% end %>
+  <%= if @login_modal do %>
+    <.modal modal_id="login-modal" ><.live_component module={BlogWeb.LoginFormComponent} id="modal-login" user_changeset={@user_changeset} /></.modal>
+  <% end %>
+  <%= if @post_modal do %>
+    <.modal modal_id="post-modal"><.live_component module={BlogWeb.PostComponent} id="modal-post" post={@post} user_id={@user_id} /></.modal>
+  <% end %>
+  <%= if @post_write_modal do %>
+    <.modal modal_id="post-write-modal"><.live_component module={BlogWeb.PostWriteComponent} id="modal-post-write" user_id={@user_id} /></.modal>
+  <% end %>
+  <%= if @post_edit_modal do %>
+    <.modal modal_id="post-edit-modal"><.live_component module={BlogWeb.PostEditComponent} id="modal-post-edit" user_id={@user_id} post_id={@post_id} /></.modal>
+  <% end %>
+  <%= if @comment_write_modal do %>
+    <.modal modal_id="comment-write-modal"><.live_component module={BlogWeb.CommentWriteComponent} id="modal-comment-write" user_id={@user_id} post_id={@post_id} /></.modal>
+  <% end %>
+  <%= if @comment_edit_modal do %>
+    <.modal modal_id="comment-edit-modal"><.live_component module={BlogWeb.CommentEditComponent} id="modal-comment-edit" user_id={@user_id} post_id={@post_id} comment_id={@comment_id} /></.modal>
+  <% end %>
+</div>

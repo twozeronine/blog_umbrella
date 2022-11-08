@@ -29,6 +29,14 @@ defmodule BlogDomain.Accounts.User do
     |> unique_constraint([:user_email])
   end
 
+  def login_changeset(struct, params \\ %{}) do
+    struct
+    |> cast(params, [:user_email, :password])
+    |> validate_length(:password, [{:min, 8}, {:max, 128}])
+    |> put_password_hash()
+    |> validate_required([:user_email, :password_hash])
+  end
+
   def user_id_query(query, user_id) do
     from(q in query, [{:where, q.user_id == ^user_id}])
   end

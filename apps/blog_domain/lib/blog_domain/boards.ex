@@ -3,14 +3,25 @@ defmodule BlogDomain.Boards do
 
   alias BlogDomain.Accounts.User
   alias BlogDomain.Boards.{Post, Comment}
+  alias Blog.PubSub
 
   def create_post(%User{id: user_id}, params \\ %{}) do
-    %Post{user_id: user_id}
-    |> Post.changeset(params)
-    |> Repo.insert()
+    data =
+      %Post{user_id: user_id}
+      |> Post.changeset(params)
+      |> Repo.insert()
+
+    PubSub.broadcast({:post_created, data})
+    data
   end
 
   def get_post(id), do: Repo.get(Post, id)
+
+  def get_post_preload(id) do
+    Post
+    |> Post.preload_comment_post_query()
+    |> Repo.get(id)
+  end
 
   def get_post_lock(post_id) do
     Post
@@ -30,21 +41,31 @@ defmodule BlogDomain.Boards do
   end
 
   def update_post(post_id, params \\ %{}) do
-    fn ->
-      case get_post_lock(post_id) do
-        %Post{} = post -> Post.changeset(post, params) |> Repo.update()
-        nil -> {:error, :not_found}
+    {:ok, data} =
+      fn ->
+        case get_post_lock(post_id) do
+          %Post{} = post -> Post.changeset(post, params) |> Repo.update()
+          nil -> {:error, :not_found}
+        end
       end
-    end
-    |> Repo.transaction()
+      |> Repo.transaction()
+
+    PubSub.broadcast({:post_updated, data})
+
+    {:ok, data}
   end
 
   def delete_post(%Post{} = post), do: Repo.delete(post)
 
   def write_comment(%User{id: user_id}, post_id, params \\ %{}) do
-    %Comment{user_id: user_id, post_id: post_id}
-    |> Comment.changeset(params)
-    |> Repo.insert()
+    data =
+      %Comment{user_id: user_id, post_id: post_id}
+      |> Comment.changeset(params)
+      |> Repo.insert()
+
+    PubSub.broadcast({:comment_created, data})
+
+    data
   end
 
   def get_post_comment(post_id, comment_id) do
@@ -60,16 +81,31 @@ defmodule BlogDomain.Boards do
   end
 
   def update_post_comment(%User{} = user, post_id, comment_id, params \\ %{}) do
-    fn ->
-      case get_user_post_comment_lock(user, post_id, comment_id) do
-        %Comment{} = comment -> Comment.changeset(comment, params) |> Repo.update()
-        nil -> {:error, :not_found}
+    {:ok, data} =
+      fn ->
+        case get_user_post_comment_lock(user, post_id, comment_id) do
+          %Comment{} = comment -> Comment.changeset(comment, params) |> Repo.update()
+          nil -> {:error, :not_found}
+        end
       end
-    end
-    |> Repo.transaction()
+      |> Repo.transaction()
+
+    PubSub.broadcast({:comment_updated, data})
+
+    {:ok, data}
   end
 
   def delete_comment(%Comment{} = comment), do: Repo.delete(comment)
+
+  def change_post(params \\ %{}) do
+    %Post{}
+    |> Post.changeset(params)
+  end
+
+  def change_comment(params \\ %{}) do
+    %Comment{}
+    |> Comment.changeset(params)
+  end
 
   defp get_user_post_comment_lock(%User{id: user_id}, post_id, comment_id) do
     Comment
