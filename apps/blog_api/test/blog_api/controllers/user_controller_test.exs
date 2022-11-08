@@ -29,13 +29,13 @@ defmodule BlogApi.UserControllerTest do
 
     assert %{
              "data" => [
-               %{"user_email" => "User Email1", "user_name" => "User1"},
-               %{"user_email" => "User Email2", "user_name" => "User2"},
-               %{"user_email" => "User Email3", "user_name" => "User3"},
-               %{"user_email" => "User Email4", "user_name" => "User4"},
-               %{"user_email" => "User Email5", "user_name" => "User5"}
+               %{"user_email" => _user_email1, "user_name" => _user_name1},
+               %{"user_email" => _user_email2, "user_name" => _user_name2},
+               %{"user_email" => _user_email3, "user_name" => _user_name3},
+               %{"user_email" => _user_email4, "user_name" => _user_name4},
+               %{"user_email" => _user_email5, "user_name" => _user_name5}
              ]
-           } == json_response(conn, 200)
+           } = json_response(conn, 200)
   end
 
   test "GET /users  invalid authentication", %{conn: conn} do
