@@ -8,7 +8,9 @@ config :blog_domain, BlogDomain.Repo,
   database: "blog_prod",
   pool_size: 10,
   port: 5432,
-  priv: "priv/repo"
+  priv: "priv/repo",
+  ssl: false,
+  socket_options: [:inet6]
 
 config :blog_api, BlogApi.Endpoint,
   url: [scheme: "https", host: "api.foo.bar", port: 443],
@@ -21,6 +23,7 @@ config :blog_api, BlogApi.Endpoint,
     ]
   ],
   server: true,
-  check_origin: false
+  check_origin: false,
+  force_ssl: [rewrite_on: [:x_forwarded_proto]],
 
 config :logger, level: :info
