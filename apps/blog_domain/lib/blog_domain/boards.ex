@@ -6,13 +6,13 @@ defmodule BlogDomain.Boards do
   alias Blog.PubSub
 
   def create_post(%User{id: user_id}, params \\ %{}) do
-    result =
+    data =
       %Post{user_id: user_id}
       |> Post.changeset(params)
       |> Repo.insert()
 
-    PubSub.broadcast(result, :post_created)
-    result
+    PubSub.broadcast({:post_created, data})
+    data
   end
 
   def get_post(id), do: Repo.get(Post, id)
@@ -41,7 +41,7 @@ defmodule BlogDomain.Boards do
   end
 
   def update_post(post_id, params \\ %{}) do
-    {:ok, result} =
+    {:ok, data} =
       fn ->
         case get_post_lock(post_id) do
           %Post{} = post -> Post.changeset(post, params) |> Repo.update()
@@ -50,22 +50,22 @@ defmodule BlogDomain.Boards do
       end
       |> Repo.transaction()
 
-    PubSub.broadcast(result, :post_updated)
+    PubSub.broadcast({:post_updated, data})
 
-    {:ok, result}
+    {:ok, data}
   end
 
   def delete_post(%Post{} = post), do: Repo.delete(post)
 
   def write_comment(%User{id: user_id}, post_id, params \\ %{}) do
-    result =
+    data =
       %Comment{user_id: user_id, post_id: post_id}
       |> Comment.changeset(params)
       |> Repo.insert()
 
-    PubSub.broadcast(result, :comment_created)
+    PubSub.broadcast({:comment_created, data})
 
-    result
+    data
   end
 
   def get_post_comment(post_id, comment_id) do
@@ -81,7 +81,7 @@ defmodule BlogDomain.Boards do
   end
 
   def update_post_comment(%User{} = user, post_id, comment_id, params \\ %{}) do
-    {:ok, result} =
+    {:ok, data} =
       fn ->
         case get_user_post_comment_lock(user, post_id, comment_id) do
           %Comment{} = comment -> Comment.changeset(comment, params) |> Repo.update()
@@ -90,9 +90,9 @@ defmodule BlogDomain.Boards do
       end
       |> Repo.transaction()
 
-    PubSub.broadcast(result, :comment_updated)
+    PubSub.broadcast({:comment_updated, data})
 
-    {:ok, result}
+    {:ok, data}
   end
 
   def delete_comment(%Comment{} = comment), do: Repo.delete(comment)

@@ -35,7 +35,7 @@ defmodule BlogWeb.PageLive do
   end
 
   @impl true
-  def handle_info({{:ok, post}, :post_created}, socket) do
+  def handle_info({:post_created, {:ok, post}}, socket) do
     posts =
       [post | socket.assigns.posts]
       |> Enum.sort(&(&1.id <= &2.id))
@@ -43,7 +43,7 @@ defmodule BlogWeb.PageLive do
     {:noreply, assign(socket, %{posts: posts, post_write_modal: false})}
   end
 
-  def handle_info({{:ok, _post}, :post_updated}, socket) do
+  def handle_info({:post_updated, {:ok, _post}}, socket) do
     {:noreply,
      assign(socket, %{
        posts:
@@ -53,15 +53,15 @@ defmodule BlogWeb.PageLive do
      })}
   end
 
-  def handle_info({{:ok, _comment}, :comment_created}, socket) do
+  def handle_info({:comment_created, {:ok, _comment}}, socket) do
     {:noreply, assign(socket, %{comment_write_modal: false})}
   end
 
-  def handle_info({{:ok, _comment}, :comment_updated}, socket) do
+  def handle_info({:comment_updated, {:ok, _comment}}, socket) do
     {:noreply, assign(socket, %{comment_edit_modal: false})}
   end
 
-  def handle_info({{:error, _changeset}, _message}, socket) do
+  def handle_info({_message, {:error, _changeset}}, socket) do
     {:noreply, socket}
   end
 

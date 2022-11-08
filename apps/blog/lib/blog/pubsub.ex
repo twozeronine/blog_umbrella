@@ -19,7 +19,7 @@ defmodule Blog.PubSub do
     Phoenix.PubSub.unsubscribe(__MODULE__, @topic)
   end
 
-  def broadcast(topic, message) do
-    Phoenix.PubSub.broadcast(__MODULE__, @topic, {topic, message})
+  def broadcast({_event, _data} = message) do
+    Phoenix.PubSub.broadcast(__MODULE__, @topic, message)
   end
 end
