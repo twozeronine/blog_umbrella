@@ -34,7 +34,6 @@ config :blog_api, BlogApi.Endpoint,
   ],
   server: true,
   check_origin: false,
-  force_ssl: [rewrite_on: [:x_forwarded_proto]],
-
+  force_ssl: [rewrite_on: [:x_forwarded_proto]]
 
 config :logger, level: :info
