@@ -8,9 +8,6 @@ defmodule BlogDomain.Application do
     ]
 
     opts = [strategy: :one_for_one, name: __MODULE__]
-    BlogDomain.Repo.migrate()
     Supervisor.start_link(children, opts)
-
-
   end
 end

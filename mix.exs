@@ -29,8 +29,8 @@ defmodule Blog.Umbrella.MixProject do
         include_executables_for: [:unix],
         applications: [
           blog: :permanent,
-          blog_api: :permanent,
-          blog_domain: :permanent
+          blog_domain: :permanent,
+          blog_web: :permanent
         ]
       ]
     ]
