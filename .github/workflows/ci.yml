@@ -20,12 +20,12 @@ jobs:
       - name: Cache dependencies
         id: mix-cahe
         uses: actions/cache@v3
-        with:        
+        with:
           path: |
             deps
             _build
             priv/plts
-            key: ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-${{ hashFiles('mix.lock') }}
+          key: ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-${{ hashFiles('mix.lock') }}
 
 
       - name: Prepare Development Environment
