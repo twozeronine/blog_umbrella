@@ -14,6 +14,7 @@ defmodule BlogWeb.Router do
     pipe_through :browser
 
     live "/", PageLive
+    get "/ping", PingController, :index
   end
 
   if Mix.env() in [:dev, :test] do
