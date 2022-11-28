@@ -1,4 +1,4 @@
-defmodule BlogApi.PingController do
+defmodule BlogWeb.PingController do
   use BlogWeb, :controller
 
   def index(conn, _param) do
