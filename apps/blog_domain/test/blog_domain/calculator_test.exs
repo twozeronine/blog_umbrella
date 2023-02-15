@@ -3,7 +3,6 @@ defmodule BlogDomain.CalculatorTest do
   use Mimic
   alias BlogDomain.Calculator
 
-
   test "invokes mult once and add twice" do
     Calculator
     |> stub(:add, fn x, y -> :stub end)
@@ -14,5 +13,4 @@ defmodule BlogDomain.CalculatorTest do
     assert Calculator.mult(2, 3) == 6
     assert Calculator.mult(2, 3) == 6
   end
-
 end
