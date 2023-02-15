@@ -32,7 +32,8 @@ defmodule BlogDomain.MixProject do
       {:blog, in_umbrella: true},
       {:ecto_sql, "~> 3.6"},
       {:postgrex, ">= 0.0.0"},
-      {:jason, "~> 1.2"}
+      {:jason, "~> 1.2"},
+      {:mimic, "~> 1.7", only: :test}
     ]
   end
 
